@@ -7,15 +7,18 @@ const DestinationSchema = mongoose.Schema({
     },
     destinationName: {
         type:String, 
-        required: true
+        required: true,
+        trim: true
     },
     description: {
         type:String, 
-        required: true
+        required: true,
+        trim: true
     },
     climate: {
         type:String, 
-        required: true
+        required: true,
+        trim: true
     }   
 }, {
     timestamps: true

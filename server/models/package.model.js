@@ -5,12 +5,16 @@ const PackageSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'destination',
         required: true,
-      },
+    },
     packageName: {
         type:String,
+        required: true,
+        trim: true
+    },
+    noOfDays: {
+        type:Number,
         required: true
     },
-    noOfDays: Number,
     overviewDetails: {
         type:String,
         required: true
