@@ -1,0 +1,46 @@
+.footer {
+    background-color: #49c0b6;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px; /* Smaller font size */
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-around; /* Align sections horizontally with space between */
+    width: 100%;
+    margin-bottom: 10px; /* Space between content and bottom text */
+  }
+  
+  .footer-section {
+    flex: 1;
+    min-width: 200px; /* Ensure sections are wide enough */
+    margin: 0 10px; /* Margin between sections */
+    text-align: center; /* Center align text */
+  }
+  
+  .footer-section h3 {
+    margin-bottom: 10px;
+    font-size: 16px; /* Smaller font size for headings */
+  }
+  
+  .footer-section ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-section li {
+    margin: 5px 0;
+  }
+
+
+  .footer-bottom {
+    text-align: center;
+    width: 100%;
+    font-size: 12px; /* Smaller font size for footer bottom text */
+  }
+  
