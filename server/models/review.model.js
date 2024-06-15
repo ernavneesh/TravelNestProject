@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DiscountSchema = mongoose.Schema({
+const ReviewSchema = mongoose.Schema({
     packageId: {
         type: mongoose.Types.ObjectId,
         ref: 'package',
@@ -29,5 +29,5 @@ const DiscountSchema = mongoose.Schema({
     timestamps: true
 });
 
-const Discount = mongoose.model('Discount', DiscountSchema);
-module.exports = Discount
+const Review = mongoose.model('Review', ReviewSchema);
+module.exports = Review
