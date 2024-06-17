@@ -43,7 +43,7 @@ const Header = () => {
                 <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} /> {/* Adjusted logo height */}
                 <nav>
                     <ul>
-                        <li><a href="#home">Home</a></li>
+                        <li><a href="/">Home</a></li>
                         <li className="dropdown" ref={dropdownRef}>
                             <a href="#destination" onClick={handleDropdownToggle}>
                                 Destinations
