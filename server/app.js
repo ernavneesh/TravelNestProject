@@ -1,3 +1,4 @@
+require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.route');
@@ -18,8 +19,7 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoutes);
 
 // Connect to MongoDB
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/travelnest', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
