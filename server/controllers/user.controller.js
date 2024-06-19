@@ -12,7 +12,8 @@ const registerUser = async (req, res) => {
 
         const user = new User(req.body);
         await user.save();
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+        //const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
         res.status(201).send({ message: 'User registered successfully', token: token, userInfo:user });
     } catch (error) {
         res.status(400).send(error);
@@ -33,7 +34,8 @@ const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).send({ error: 'Invalid email or password' });
         }
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        //const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
         res.status(200).send({ message: 'Login successful', "UserInfo":user, token : token });
     } catch (error) {
