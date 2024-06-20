@@ -9,13 +9,14 @@ async function seedDestination() {
   });
 
   // Create destination credentials
-  const destinationData = {
-    image: "dummy.png",
-    destinationName: "Bali",
-    description: "This is dummy destination data",
-    climate: "climate.png"
-    // Add other fields as needed
-  };
+  const destinationData = [
+    {
+      image: "uploads/destination/vietnam.png",
+      destinationName: "Vietnam",
+      description: "Vietnam, a country shaped like an elongated “.S:,” offers a breathtaking diversity of adventures and landscapes, from bustling megacities to pristine white-sand beaches, emerald-green rice paddies, and towering limestone peaks. With a rich history spanning thousands of years, Vietnam has something to offer every traveler.",
+      climate: "uploads/climate/Vietnam-weather.png"
+    },
+  ];
 
   // Create destination
   await DestinationModel.create(destinationData);
