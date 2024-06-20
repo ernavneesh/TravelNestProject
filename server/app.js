@@ -2,6 +2,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.route');
+const destinationRoutes = require('./routes/destination.route');
 const mongoose = require('mongoose');
 
 // Create an Express app
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 
 // Use user routes
 app.use('/api/users', userRoutes);
+app.use('/api/destination', destinationRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
