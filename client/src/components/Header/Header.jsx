@@ -4,30 +4,22 @@ import logo from '../../assets/images/logo.png'; // Adjust the path as per your 
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [clickCounts, setClickCounts] = useState({
-        vietnam: 0,
-        laos: 0,
-        cambodia: 0,
-        thailand: 0
-    });
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
     };
 
+    const handleMenuToggle = () => {
+        setMenuOpen(!menuOpen);
+    };
+
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             setDropdownOpen(false);
         }
-    };
-
-    const handleDropdownItemClick = (item) => {
-        setClickCounts(prevCounts => ({
-            ...prevCounts,
-            [item]: prevCounts[item] + 1
-        }));
-        console.log(`Clicked on ${item}. Count: ${clickCounts[item] + 1}`);
     };
 
     useEffect(() => {
@@ -37,11 +29,27 @@ const Header = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/destination');
+                const data = await response.json();
+                setDestinations(data);
+            } catch (error) {
+                console.error('Error fetching destinations:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
-        <header className="header"> {/* Updated className */}
+        <header className="header">
             <div className="main-nav">
-                <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} /> {/* Adjusted logo height */}
-                <nav>
+                <img src={logo} alt="Viland Travel Logo" className="logo" />
+                <button className="menu-toggle" onClick={handleMenuToggle}>
+                    ☰
+                </button>
+                <nav className={menuOpen ? 'open' : ''}>
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li className="dropdown" ref={dropdownRef}>
@@ -50,18 +58,13 @@ const Header = () => {
                             </a>
                             {dropdownOpen && (
                                 <ul className="dropdown-menu">
-                                    <li><a href="#vietnam" onClick={() => handleDropdownItemClick('vietnam')}>
-                                        Vietnam
-                                    </a></li>
-                                    <li><a href="#laos" onClick={() => handleDropdownItemClick('laos')}>
-                                        Laos
-                                    </a></li>
-                                    <li><a href="#cambodia" onClick={() => handleDropdownItemClick('cambodia')}>
-                                        Cambodia
-                                    </a></li>
-                                    <li><a href="#thailand" onClick={() => handleDropdownItemClick('thailand')}>
-                                        Thailand
-                                    </a></li>
+                                    {destinations.map(destination => (
+                                        <li key={destination._id}>
+                                            <a href={`#${destination.destinationName.toLowerCase()}`}>
+                                                {destination.destinationName}
+                                            </a>
+                                        </li>
+                                    ))}
                                 </ul>
                             )}
                         </li>

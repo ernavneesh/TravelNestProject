@@ -2,15 +2,13 @@ import React from 'react';
 import './DestinationCard.css';
 
 function DestinationCard({ destination, onClick, clickCount }) {
+  const imageUrl = `http://localhost:3000/${destination.image}`;
+
   return (
-    <div className="destination-card" onClick={() => onClick(destination.name)}>
-      <img src={destination.imageUrl} alt={destination.name} className="destination-image" />
-      <div className="destination-info">
-        <h3>{destination.name}</h3>
-        <p>Price per person: {destination.price}</p>
-        {clickCount !== undefined && (
-          <p className="click-count">Clicked: {clickCount} times</p>
-        )}
+    <div className="destination-card" onClick={onClick}>
+      <img src={imageUrl} alt={destination.destinationName} className="destination-image"/>
+      <div className='destination-info'>
+        <h3>{destination.destinationName}</h3>
       </div>
     </div>
   );
