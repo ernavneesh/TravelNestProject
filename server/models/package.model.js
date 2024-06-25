@@ -26,7 +26,19 @@ const PackageSchema = mongoose.Schema({
     amountPerPerson: {
         type:String,
         required: true
-    }    
+    },
+    locations: {
+
+    },
+    highlights: { type: [String], default: [] },
+    itinerary: [
+        {
+            shortDescription: String,
+            longDescription : String,
+            meal: ["Breakfast","Lunch","Dinner","Not Included"],
+            image: String
+        }
+    ]  
 }, {
     timestamps: true
 });
