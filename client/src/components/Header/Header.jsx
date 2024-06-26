@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
 import './Header.css';
 import logo from '../../assets/images/logo.png'; // Adjust the path as per your file location
 
@@ -69,7 +70,8 @@ const Header = () => {
                             )}
                         </li>
                         <li><a href="#about">About Us</a></li>
-                        <li><a href="#login">Login/Register</a></li>
+                        <li><Link to="/register">Login/Register</Link></li>
+                        {/*<li><a href="#login">Login/Register</a></li>*/}
                     </ul>
                 </nav>
             </div>

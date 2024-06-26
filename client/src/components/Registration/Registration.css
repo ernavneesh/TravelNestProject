@@ -1,0 +1,95 @@
+/* Registration.css */
+
+/* Main container for registration */
+.registration-container {
+    display: flex;
+    flex-direction: column; /* For smaller screens */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+@media (min-width: 768px) {
+    .registration-container {
+        flex-direction: row; /* For larger screens, revert to row layout */
+        justify-content: left;
+        align-items: left;
+    }
+}
+
+/* Image container */
+.image-container {
+    flex: 1;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.image-container img {
+    max-width: 100%; /* Ensure image is responsive */
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Form container */
+.form-container {
+    flex: 1;
+    max-width: 400px;
+    width: 70%;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.register-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #49c0b6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px; /* Optional margin for button */
+}
+
+.register-button:hover {
+    background-color: #138496;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #49c0b6
+    /* Additional styles as needed */
+}
