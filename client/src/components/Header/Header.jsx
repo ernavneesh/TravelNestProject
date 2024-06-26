@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import './Header.css';
-import logo from '../../assets/images/logo.png'; // Adjust the path as per your file location
+import logo from '../../assets/images/logo.png';
+import { SessionContext } from '../../context/SessionContext';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -11,6 +13,7 @@ const Header = () => {
         thailand: 0
     });
     const dropdownRef = useRef(null);
+    const { username, handleLogout } = useContext(SessionContext);
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -38,9 +41,9 @@ const Header = () => {
     }, []);
 
     return (
-        <header className="header"> {/* Updated className */}
+        <header className="header">
             <div className="main-nav">
-                <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} /> {/* Adjusted logo height */}
+                <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} />
                 <nav>
                     <ul>
                         <li><a href="/">Home</a></li>
@@ -66,7 +69,14 @@ const Header = () => {
                             )}
                         </li>
                         <li><a href="#about">About Us</a></li>
-                        <li><a href="#login">Login/Register</a></li>
+                        {username ? (
+                            <>
+                                <li>Welcome, {username}</li>
+                                <li><button onClick={handleLogout} className="logout-button">Logout</button></li>
+                            </>
+                        ) : (
+                            <li><Link to="/login">Login/Register</Link></li>
+                        )}
                     </ul>
                 </nav>
             </div>

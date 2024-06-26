@@ -2,12 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.route');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Import cors package
 
 // Create an Express app
 const app = express();
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
+app.use(cors());
+
 
 // Example defining a route in Express
 app.get('/', (req, res) => {
