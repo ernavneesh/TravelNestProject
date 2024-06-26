@@ -13,8 +13,8 @@ const PackageSchema = mongoose.Schema({
         {
             shortDescription: {type:String, required: true},
             longDescription : {type:String, required: true},
-            meal: ["Breakfast","Lunch","Dinner","Not Included"],
-            image: {type:String, required: true}
+            meal: {type:String, required: true},
+            image: {type:String, default:null}
         }
     ]  
 }, {
