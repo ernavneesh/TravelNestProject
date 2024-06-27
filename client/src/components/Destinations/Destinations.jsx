@@ -1,3 +1,4 @@
+// Destinations.jsx
 import React, { useState, useEffect } from 'react';
 import DestinationCard from './DestinationCard';
 import Search from '../Search/Search';

@@ -4,23 +4,27 @@ import './App.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Destinations from './components/Destinations/Destinations';
-import Registration from './components/Registration/Registration'; // Import Registration component
+import DestinationDetails from './components/Destinations/DestinationDetails';
+import AboutUs from './components/AboutUs/AboutUs';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <div className="content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/destinations" element={<Destinations />} />
-            <Route path="/register" element={<Registration />} /> {/* Add Registration route */}
-          </Routes>
+      <Router>
+        <div className="App">
+          <Header />
+          <div className="content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/destinations" element={<Destinations />} />
+              <Route path="/destinations/:id" element={<DestinationDetails />} />
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </Router>
+      </Router>
   );
 }
 

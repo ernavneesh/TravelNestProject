@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user.route');
 const destinationRoutes = require('./routes/destination.route');
+const packageRoutes = require('./routes/package.route');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/destination', destinationRoutes);
+app.use('/api/package', packageRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,

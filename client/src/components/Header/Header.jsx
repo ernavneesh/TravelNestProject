@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import './Header.css';
-import logo from '../../assets/images/logo.png'; // Adjust the path as per your file location
+import { Link } from 'react-router-dom';
+import logo from '../../assets/images/logo.png';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -61,17 +62,16 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                            <a href={`#${destination.destinationName.toLowerCase()}`}>
-                                                {destination.destinationName}
-                                            </a>
-                                        </li>
+                                        <Link to={`/destinations/${destination._id}`}>
+                                            {destination.destinationName}
+                                        </Link>
+                                    </li>
                                     ))}
                                 </ul>
                             )}
                         </li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><Link to="/register">Login/Register</Link></li>
-                        {/*<li><a href="#login">Login/Register</a></li>*/}
+                        <li><a href="/about-us">About Us</a></li>
+                        <li><a href="/login">Login/Register</a></li>
                     </ul>
                 </nav>
             </div>
