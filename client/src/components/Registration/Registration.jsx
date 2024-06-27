@@ -17,20 +17,14 @@ const Registration = () => {
 
     const validate = () => {
         let tempErrors = {};
-        const nameRegex = /^[a-zA-Z]*$/;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const contactNumberRegex = /^\d{10}$/;
 
         if (!formData.firstName) {
             tempErrors.firstName = "First Name is required.";
-        } else if (!nameRegex.test(formData.firstName)) {
-            tempErrors.firstName = "Write a valid first name.";
         }
 
         if (!formData.lastName) {
             tempErrors.lastName = "Last Name is required.";
-        } else if (!nameRegex.test(formData.lastName)) {
-            tempErrors.lastName = "Write a valid last name.";
         }
 
         if (!formData.email) {
@@ -53,8 +47,6 @@ const Registration = () => {
 
         if (!formData.contactNumber) {
             tempErrors.contactNumber = "Contact Number is required.";
-        } else if (!contactNumberRegex.test(formData.contactNumber)) {
-            tempErrors.contactNumber = "Contact Number must be 10 digits.";
         }
 
         setErrors(tempErrors);
@@ -63,53 +55,34 @@ const Registration = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
-        switch (name) {
-            case 'firstName':
-            case 'lastName':
-                // Restrict input to alphabetic characters only
-                if (/^[a-zA-Z]*$/.test(value) || value === '') {
-                    setFormData({
-                        ...formData,
-                        [name]: value,
-                    });
-                }
-                break;
-            case 'email':
-            case 'password':
-            case 'confirmPassword':
-                // Allow any characters for email, password, and confirmPassword
-                setFormData({
-                    ...formData,
-                    [name]: value,
-                });
-                break;
-            case 'contactNumber':
-                // Restrict input to digits only and limit to 10 characters
-                if (/^\d{0,10}$/.test(value) || value === '') {
-                    setFormData({
-                        ...formData,
-                        [name]: value,
-                    });
-                }
-                break;
-            default:
-                setFormData({
-                    ...formData,
-                    [name]: value,
-                });
-                break;
-        }
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
             try {
-                const response = await axios.post('http://localhost:3000/api/register', formData);
+                const response = await axios.post('http://localhost:3000/api/users/register', formData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                console.log(response)
                 setMessage('Registration successful!');
             } catch (error) {
-                setMessage('Registration failed. Please try again.');
+                console.log("error",error)
+                if (error.response && error.response.status === 400 && error.response.data && error.response.data.errmsg) {
+                    if (error.response.data.errmsg.includes('duplicate key error')) {
+                        setMessage('User Already Exists');
+                    } else {
+                        setMessage('Please try again.');
+                    }
+                } else {
+                    setMessage(' Please try again.');
+                }
             }
         }
     };
@@ -181,7 +154,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="contactNumber">Contact Number:</label>
                         <input
-                            type="text"
+                            type="number"
                             id="contactNumber"
                             name="contactNumber"
                             value={formData.contactNumber}

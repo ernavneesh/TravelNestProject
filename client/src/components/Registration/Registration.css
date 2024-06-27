@@ -86,6 +86,14 @@ h2 {
     background-color: #138496;
 }
 
+/* Error message styling */
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 /* Footer */
 .footer {
     text-align: center;
