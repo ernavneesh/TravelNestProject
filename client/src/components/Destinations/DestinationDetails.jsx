@@ -5,8 +5,8 @@ import './DestinationDetails.css';
 function DestinationDetails() {
   const { id } = useParams();
   const [destination, setDestination] = useState(null);
-  // const [packages, setPackages] = useState([]);
-  // const [sortCriteria, setSortCriteria] = useState('days'); // Default sort by number of days
+  const [packages, setPackages] = useState([]);
+  const [sortCriteria, setSortCriteria] = useState('days'); // Default sort by number of days
 
   useEffect(() => {
     const fetchDestination = async () => {
@@ -20,41 +20,44 @@ function DestinationDetails() {
       }
     };
 
-    // const fetchPackages = async () => {
-    //   try {
-    //     const response = await fetch(`http://localhost:3001/api/packages?destinationId=${id}`);
-    //     const data = await response.json();
-    //     console.log("Packages :", data);
-    //     setPackages(data);
-    //   } catch (error) {
-    //     console.error('Error fetching packages:', error);
-    //   }
-    // };
+     const fetchPackages = async () => {
+       try {
+         const response = await fetch(`http://localhost:3000/api/package`);
+         const data = await response.json();
+         
+         const filteredPackages = data.filter(pkg => pkg.destinationId === id);
+         setPackages(filteredPackages);
+         console.log("Packages :", filteredPackages);
+         setPackages(filteredPackages);
+       } catch (error) {
+         console.error('Error fetching packages:', error);
+       }
+     };
 
     fetchDestination();
-    // fetchPackages();
+    fetchPackages();
   }, [id]);
 
-  // const sortPackages = (packages, criteria) => {
-  //   return [...packages].sort((a, b) => {
-  //     if (criteria === 'days') {
-  //       return parseInt(a.noOfDays) - parseInt(b.noOfDays);
-  //     } else if (criteria === 'price') {
-  //       return parseFloat(a.amountPerPerson.replace(/[^\d.-]/g, '')) - parseFloat(b.amountPerPerson.replace(/[^\d.-]/g, ''));
-  //     }
-  //     return 0;
-  //   });
-  // };
+   const sortPackages = (packages, criteria) => {
+     return [...packages].sort((a, b) => {
+       if (criteria === 'days') {
+         return parseInt(a.noOfDays) - parseInt(b.noOfDays);
+       } else if (criteria === 'price') {
+         return parseFloat(a.amountPerPerson.replace(/[^\d.-]/g, '')) - parseFloat(b.amountPerPerson.replace(/[^\d.-]/g, ''));
+       }
+       return 0;
+     });
+   };
 
-  // const handleSortChange = (e) => {
-  //   setSortCriteria(e.target.value);
-  // };
+   const handleSortChange = (e) => {
+     setSortCriteria(e.target.value);
+   };
 
   if (!destination) {
     return <div>Loading...</div>;
   }
 
-  // const sortedPackages = sortPackages(packages, sortCriteria);
+   const sortedPackages = sortPackages(packages, sortCriteria);
 
 
   return (
@@ -81,7 +84,7 @@ function DestinationDetails() {
         <h3>Inspiring Ideas for {destination.destinationName} vacations</h3>
       </div>
 
-      {/* <div className="sort-container">
+      <div className="sort-container">
         <label htmlFor="sort">Sort by:</label>
         <select id="sort" value={sortCriteria} onChange={handleSortChange}>
           <option value="days">Number of Days</option>
@@ -92,21 +95,21 @@ function DestinationDetails() {
         {sortedPackages.map((pkg) => (
           <article key={pkg._id} className="tour-item col-xs-12 col-sm-6 col-lg-4">
             <div className="tour-item-wrapper">
-              <img src={pkg.packageImage} alt={pkg.packageName} className="destination-image" />
+              <img src={`http://localhost:3000/${pkg.packageImage}`} alt={pkg.packageName} className="destination-image" />
               <div className="entry-body">
                 <h3 className="entry-title">
                   <a href={`/packages/${pkg._id}`} itemProp="url">{pkg.packageName}</a>
                 </h3>
                 <div className="tour-destinations">
-                  <i className="material-icons-outlined">location_on</i>
+                  <i className="fas fa-map-marker-alt">&nbsp;&nbsp;&nbsp;</i>
                   {Array.isArray(pkg.locations) ? pkg.locations.join(' - ') : pkg.locations}
                 </div>
-                <p className="entry-price">{pkg.amountPerPerson}</p>
+                <p className="entry-price">No of day : {pkg.noOfDays} &nbsp;&nbsp;&nbsp;&nbsp;Price : {pkg.amountPerPerson}</p>
               </div>
             </div>
           </article>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }
