@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Registration.css';
 import registrationImage from '../../assets/images/image.png'; // Adjust the path to your image
 
@@ -10,10 +11,12 @@ const Registration = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        contactNumber: '',
+        contact: '',
     });
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
+
+    const navigate = useNavigate();
 
     const validate = () => {
         let tempErrors = {};
@@ -45,8 +48,8 @@ const Registration = () => {
             tempErrors.confirmPassword = "Confirm Password is required.";
         }
 
-        if (!formData.contactNumber) {
-            tempErrors.contactNumber = "Contact Number is required.";
+        if (!formData.contact) {
+            tempErrors.contact = "Contact is required.";
         }
 
         setErrors(tempErrors);
@@ -70,18 +73,26 @@ const Registration = () => {
                         'Content-Type': 'application/json',
                     }
                 });
-                console.log(response)
+                console.log(response);
                 setMessage('Registration successful!');
+                navigate('/login'); // Redirect to login page
             } catch (error) {
-                console.log("error",error)
-                if (error.response && error.response.status === 400 && error.response.data && error.response.data.errmsg) {
-                    if (error.response.data.errmsg.includes('duplicate key error')) {
-                        setMessage('User Already Exists');
+                console.error("Error response:", error.response);
+                if (error.response && error.response.status === 400) {
+                    if (error.response.data && error.response.data.errors) {
+                        const serverErrors = error.response.data.errors;
+                        let errorMessage = 'Please correct the following errors:\n';
+                        for (let field in serverErrors) {
+                            errorMessage += `${field}: ${serverErrors[field].message}\n`;
+                        }
+                        setMessage(errorMessage);
+                    } else if (error.response.data.error && error.response.data.error.includes('Email already in use')) {
+                        setMessage('User already exists');
                     } else {
-                        setMessage('Please try again.');
+                        setMessage(error.response.data.error || 'Already registered.');
                     }
                 } else {
-                    setMessage(' Please try again.');
+                    setMessage('Network error, please try again.');
                 }
             }
         }
@@ -99,7 +110,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="firstName">First Name:</label>
                         <input
-                            type="text"
+                            type="String"
                             id="firstName"
                             name="firstName"
                             value={formData.firstName}
@@ -110,7 +121,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="lastName">Last Name:</label>
                         <input
-                            type="text"
+                            type="String"
                             id="lastName"
                             name="lastName"
                             value={formData.lastName}
@@ -121,7 +132,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
-                            type="email"
+                            type="String"
                             id="email"
                             name="email"
                             value={formData.email}
@@ -132,7 +143,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
                         <input
-                            type="password"
+                            type="String"
                             id="password"
                             name="password"
                             value={formData.password}
@@ -143,7 +154,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="confirmPassword">Confirm Password:</label>
                         <input
-                            type="password"
+                            type="String"
                             id="confirmPassword"
                             name="confirmPassword"
                             value={formData.confirmPassword}
@@ -152,18 +163,24 @@ const Registration = () => {
                         {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
                     </div>
                     <div className="form-group">
-                        <label htmlFor="contactNumber">Contact Number:</label>
+                        <label htmlFor="contact">Contact:</label>
                         <input
-                            type="number"
-                            id="contactNumber"
-                            name="contactNumber"
-                            value={formData.contactNumber}
+                            type="Number"
+                            id="contact"
+                            name="contact"
+                            value={formData.contact}
                             onChange={handleChange}
                         />
-                        {errors.contactNumber && <span className="error">{errors.contactNumber}</span>}
+                        {errors.contact && <span className="error">{errors.contact}</span>}
                     </div>
                     <button type="submit" className="register-button">Register</button>
                 </form>
+                <button
+                    className="login-button"
+                    onClick={() => navigate('/login')}
+                >
+                    Go to Login
+                </button>
             </div>
         </div>
     );
