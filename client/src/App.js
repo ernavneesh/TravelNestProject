@@ -4,10 +4,10 @@ import './App.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Destinations from './components/Destinations/Destinations';
+import PackageDetails from './PackageDetails'; 
 import DestinationDetails from './components/Destinations/DestinationDetails';
 import AboutUs from './components/AboutUs/AboutUs';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
+import Registration from './components/Registration/Registration/.';
 
 function App() {
   return (
@@ -20,6 +20,8 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
+              <Route path="/register" element={<Registration />} /> {/* Add Registration route */}
+              <Route path="/package/:packageId" component={PackageDetails} />
             </Routes>
           </div>
           <Footer />

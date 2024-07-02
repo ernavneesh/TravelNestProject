@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import './Header.css';
-import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 
 const Header = () => {
@@ -71,7 +70,9 @@ const Header = () => {
                             )}
                         </li>
                         <li><a href="/about-us">About Us</a></li>
-                        <li><a href="/login">Login/Register</a></li>
+                        {/*<li><a href="/login">Login/Register</a></li>*/}
+                        <li><Link to="/register">Login/Register</Link></li>
+                    
                     </ul>
                 </nav>
             </div>

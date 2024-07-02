@@ -1,0 +1,42 @@
+.package-details {
+    padding: 20px;
+  }
+  
+  .package-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .links {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .links a {
+    text-decoration: none;
+    color: #007BFF;
+  }
+  
+  .amount-per-person {
+    font-weight: bold;
+  }
+  
+  .itinerary-day {
+    margin: 10px 0;
+  }
+  
+  .itinerary-details {
+    margin-left: 20px;
+  }
+  
+  .book-now {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .book-now select {
+    margin-right: 10px;
+  }
+  
