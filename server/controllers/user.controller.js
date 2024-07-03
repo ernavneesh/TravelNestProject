@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const registerUser = async (req, res) => {
     try {
@@ -10,9 +11,10 @@ const registerUser = async (req, res) => {
         }
 
         const user = new User(req.body);
-        console.log(user);
         await user.save();
-        res.status(201).send(user);
+        //const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+        res.status(201).send({ message: 'User registered successfully', token: token, userInfo:user });
     } catch (error) {
         res.status(400).send(error);
     }
@@ -22,8 +24,7 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ "email": email });
-        
-        console.log(user);
+
         if (!user) {
             return res.status(400).send({ error: 'Invalid email or password' });
         }
@@ -33,8 +34,10 @@ const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).send({ error: 'Invalid email or password' });
         }
+        //const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-        res.status(200).send({ message: 'Login successful', user });
+        res.status(200).send({ message: 'Login successful', "UserInfo":user, token : token });
     } catch (error) {
         res.status(500).send(error);
     }

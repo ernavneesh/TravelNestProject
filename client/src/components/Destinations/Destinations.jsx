@@ -1,40 +1,32 @@
-import React, { useState, useContext } from 'react';
+// Destinations.jsx
+import React, { useState, useEffect } from 'react';
 import DestinationCard from './DestinationCard';
 import Search from '../Search/Search';
 import './Destinations.css';
 
-const destinationsData = [
-  {
-    name: 'Vietnam',
-    price: '$1000',
-    imageUrl: 'https://vilandtravel.com/wp-content/uploads/2023/03/ha-noi-old-street-house-viland-travel-650x1024.png.webp',
-  },
-  {
-    name: 'Laos',
-    price: '$800',
-    imageUrl: 'https://vilandtravel.com/wp-content/uploads/2023/03/luang-prabang-kuang-si-waterfall-viland-travel-1-2-684x1024.png.webp',
-  },
-  {
-    name: 'Cambodia',
-    price: '$900',
-    imageUrl: 'https://vilandtravel.com/wp-content/uploads/2023/03/siem-reap-victory-gate-viland-travel-683x1024.png.webp',
-  },
-  {
-    name: 'Thailand',
-    price: '$1200',
-    imageUrl: 'https://vilandtravel.com/wp-content/uploads/2023/03/thailand-wat-phra-bat-ming-mueang-worawihan-viland-travel-768x1024.png.webp',
-  },
-];
-
 function Destinations() {
+  const [destinations, setDestinations] = useState([]);
   const [clickCounts, setClickCounts] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
 
-  const handleCardClick = (destinationName) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/destination');
+        const data = await response.json();
+        setDestinations(data);
+      } catch (error) {
+        console.error('Error fetching destinations:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleCardClick = (destinationId) => {
     setClickCounts((prevCounts) => {
-      const newCount = (prevCounts[destinationName] || 0) + 1;
-      console.log(` clicked on ${destinationName}, Click count: ${newCount}`);
-      return { ...prevCounts, [destinationName]: newCount };
+      const newCount = (prevCounts[destinationId] || 0) + 1;
+      console.log(`Clicked on destination with ID ${destinationId}, Click count: ${newCount}`);
+      return { ...prevCounts, [destinationId]: newCount };
     });
   };
 
@@ -42,8 +34,8 @@ function Destinations() {
     setSearchTerm(term);
   };
 
-  const filteredDestinations = destinationsData.filter((destination) =>
-    destination.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDestinations = destinations.filter((destination) =>
+    destination.destinationName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -53,10 +45,10 @@ function Destinations() {
         {filteredDestinations.length > 0 ? (
           filteredDestinations.map((destination) => (
             <DestinationCard
-              key={destination.name}
+              key={destination._id}
               destination={destination}
-              onClick={handleCardClick}
-              clickCount={clickCounts[destination.name]}
+              onClick={() => handleCardClick(destination._id)}
+              clickCount={clickCounts[destination._id]}
             />
           ))
         ) : (

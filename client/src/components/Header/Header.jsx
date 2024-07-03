@@ -6,6 +6,8 @@ import { SessionContext } from '../../context/SessionContext';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [destinations, setDestinations] = useState([]);
     const [clickCounts, setClickCounts] = useState({
         vietnam: 0,
         laos: 0,
@@ -17,6 +19,10 @@ const Header = () => {
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
+    };
+
+    const handleMenuToggle = () => {
+        setMenuOpen(!menuOpen);
     };
 
     const handleClickOutside = (event) => {
@@ -40,11 +46,27 @@ const Header = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/api/destination');
+                const data = await response.json();
+                setDestinations(data);
+            } catch (error) {
+                console.error('Error fetching destinations:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <header className="header">
             <div className="main-nav">
                 <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} />
-                <nav>
+                <button className="menu-toggle" onClick={handleMenuToggle}>
+                    ☰
+                </button>
+                <nav className={menuOpen ? 'open' : ''}>
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li className="dropdown" ref={dropdownRef}>
@@ -53,6 +75,13 @@ const Header = () => {
                             </a>
                             {dropdownOpen && (
                                 <ul className="dropdown-menu">
+                                    {destinations.map(destination => (
+                                        <li key={destination._id}>
+                                            <Link to={`/destinations/${destination._id}`} onClick={() => handleDropdownItemClick(destination.destinationName)}>
+                                                {destination.destinationName}
+                                            </Link>
+                                        </li>
+                                    ))}
                                     <li><a href="#vietnam" onClick={() => handleDropdownItemClick('vietnam')}>
                                         Vietnam
                                     </a></li>
@@ -68,7 +97,7 @@ const Header = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><a href="#about">About Us</a></li>
+                        <li><a href="/about-us">About Us</a></li>
                         {username ? (
                             <>
                                 <li>Welcome, {username}</li>
