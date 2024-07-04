@@ -12,8 +12,8 @@
 @media (min-width: 768px) {
     .registration-container {
         flex-direction: row; /* For larger screens, revert to row layout */
-        justify-content: left;
-        align-items: left;
+        justify-content: space-between;
+        align-items: flex-start;
     }
 }
 
@@ -22,23 +22,28 @@
     flex: 1;
     text-align: center;
     margin-right: 20px;
+    max-width: 1000px;
+    height: 500px;
 }
 
 .image-container img {
     max-width: 100%; /* Ensure image is responsive */
     height: auto;
     border-radius: 10px;
+    flex-basis: 50%; /* Ensure equal width with the form */
+    height: 665px;
 }
 
 /* Form container */
 .form-container {
     flex: 1;
-    max-width: 400px;
+    max-width: 700px;
     width: 70%;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     border-radius: 10px;
+    flex-basis: 50%; /* Ensure equal width with the image */
 }
 
 h2 {
@@ -94,13 +99,24 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* Login link */
+.login-link {
+    display: block;
+    margin-top: 10px;
+    text-align: right;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
 /* Footer */
 .footer {
     text-align: center;
     padding: 10px;
-    background-color: #49c0b6
+    background-color: #49c0b6;
     /* Additional styles as needed */
 }
-
-
-

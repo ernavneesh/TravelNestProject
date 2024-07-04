@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Registration.css';
-import registrationImage from '../../assets/images/image.png'; // Adjust the path to your image
+import registrationImage from '../../assets/images/Registration.png'; // Adjust the path to your image
 
 const Registration = () => {
     const [formData, setFormData] = useState({
@@ -15,12 +15,14 @@ const Registration = () => {
     });
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
+    const [showPopup, setShowPopup] = useState(false); // State for pop-up visibility
 
     const navigate = useNavigate();
 
     const validate = () => {
         let tempErrors = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const contactRegex = /^\d{10}$/; // Regular expression for 10-digit contact number
 
         if (!formData.firstName) {
             tempErrors.firstName = "First Name is required.";
@@ -50,6 +52,8 @@ const Registration = () => {
 
         if (!formData.contact) {
             tempErrors.contact = "Contact is required.";
+        } else if (!contactRegex.test(formData.contact)) {
+            tempErrors.contact = "Contact must be a 10-digit number.";
         }
 
         setErrors(tempErrors);
@@ -74,26 +78,27 @@ const Registration = () => {
                     }
                 });
                 console.log(response);
-                setMessage('Registration successful!');
-                navigate('/login'); // Redirect to login page
+                setMessage('User Registration successful!');
+                setShowPopup(true); // Show pop-up message
+                setTimeout(() => {
+                    setShowPopup(false); // Hide pop-up message after 3 seconds
+                    navigate('/login'); // Redirect to login page
+                }, 3000);
             } catch (error) {
                 console.error("Error response:", error.response);
                 if (error.response && error.response.status === 400) {
-                    if (error.response.data && error.response.data.errors) {
-                        const serverErrors = error.response.data.errors;
-                        let errorMessage = 'Please correct the following errors:\n';
-                        for (let field in serverErrors) {
-                            errorMessage += `${field}: ${serverErrors[field].message}\n`;
-                        }
-                        setMessage(errorMessage);
-                    } else if (error.response.data.error && error.response.data.error.includes('Email already in use')) {
-                        setMessage('User already exists');
+                    if (error.response.data && error.response.data.error === 'Email already in use') {
+                        setMessage('Email already in use');
                     } else {
-                        setMessage(error.response.data.error || 'Already registered.');
+                        setMessage(error.response.data.error || 'Email already in use.');
                     }
                 } else {
                     setMessage('Network error, please try again.');
                 }
+                setShowPopup(true); // Show error pop-up message
+                setTimeout(() => {
+                    setShowPopup(false); // Hide error pop-up message after 3 seconds
+                }, 3000);
             }
         }
     };
@@ -105,12 +110,16 @@ const Registration = () => {
             </div>
             <div className="form-container">
                 <h2>Registration Form</h2>
-                {message && <p className="message">{message}</p>}
+                {showPopup && (
+                    <div className="popup">
+                        <p>{message}</p>
+                    </div>
+                )}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="firstName">First Name:</label>
                         <input
-                            type="String"
+                            type="text"
                             id="firstName"
                             name="firstName"
                             value={formData.firstName}
@@ -121,7 +130,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="lastName">Last Name:</label>
                         <input
-                            type="String"
+                            type="text"
                             id="lastName"
                             name="lastName"
                             value={formData.lastName}
@@ -132,7 +141,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
-                            type="String"
+                            type="email"
                             id="email"
                             name="email"
                             value={formData.email}
@@ -143,7 +152,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
                         <input
-                            type="String"
+                            type="password"
                             id="password"
                             name="password"
                             value={formData.password}
@@ -154,7 +163,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="confirmPassword">Confirm Password:</label>
                         <input
-                            type="String"
+                            type="password"
                             id="confirmPassword"
                             name="confirmPassword"
                             value={formData.confirmPassword}
@@ -165,7 +174,7 @@ const Registration = () => {
                     <div className="form-group">
                         <label htmlFor="contact">Contact:</label>
                         <input
-                            type="Number"
+                            type="tel"
                             id="contact"
                             name="contact"
                             value={formData.contact}
@@ -175,12 +184,12 @@ const Registration = () => {
                     </div>
                     <button type="submit" className="register-button">Register</button>
                 </form>
-                <button
-                    className="login-button"
+                <a
+                    className="login-link"
                     onClick={() => navigate('/login')}
                 >
-                    Go to Login
-                </button>
+                    Go Back to Login
+                </a>
             </div>
         </div>
     );
