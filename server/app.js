@@ -4,6 +4,7 @@ const userRoutes = require('./routes/user.route');
 const destinationRoutes = require('./routes/destination.route');
 const packageRoutes = require('./routes/package.route');
 const userAnalysisRoutes = require('./routes/userAnalysis.route');
+const bookingPackageRoutes = require('./routes/booking.route');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
@@ -29,6 +30,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/destination', destinationRoutes);
 app.use('/api/package', packageRoutes);
 app.use('/api/userAnalysis', userAnalysisRoutes);
+app.use('/api/bookPackage', bookingPackageRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
