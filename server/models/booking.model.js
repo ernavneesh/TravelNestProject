@@ -19,8 +19,6 @@ const BookingSchema = mongoose.Schema({
     noOfPerson: {
         type:Number, 
         required: true,
-        unique: true,
-        lowercase: true,
         trim: true
     },
     personDetails: [
