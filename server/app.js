@@ -8,6 +8,7 @@ const bookingPackageRoutes = require('./routes/booking.route');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 
 require('dotenv').config();
@@ -44,6 +45,36 @@ mongoose.connect(process.env.MONGODB_URI, {
     });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+app.post('/api/sendEmail', (req, res) => {
+    const { to, subject, text } = req.body;
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'travelnestbyechologic@gmail.com',
+        pass: 'zgcf wtdy mkgj vzez'
+      }
+    });
+  
+    const mailOptions = {
+      from: 'travelnestbyechologic@gmail.com',
+      to,
+      subject,
+      text
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Failed to send email:', error);
+        res.status(500).send('Failed to send email');
+      } else {
+        console.log('Email sent:', info.response);
+        res.status(200).send('Email sent: ' + info.response);
+      }
+    });
+  });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
