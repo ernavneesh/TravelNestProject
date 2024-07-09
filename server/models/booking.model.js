@@ -13,13 +13,12 @@ const BookingSchema = mongoose.Schema({
     },
     discoutId: {
         type: mongoose.Types.ObjectId,
-        ref: 'discount'
+        ref: 'discount',
+        default:null
     },
     noOfPerson: {
         type:Number, 
         required: true,
-        unique: true,
-        lowercase: true,
         trim: true
     },
     personDetails: [
