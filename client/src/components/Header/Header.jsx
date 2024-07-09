@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
+import { Link } from 'react-router-dom';
+import logo from '../../assets/images/logo.png';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
