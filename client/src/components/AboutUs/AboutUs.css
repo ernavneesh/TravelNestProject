@@ -1,6 +1,5 @@
 .about-us {
   padding: 20px;
-  padding-top: 80px; /* Add top padding to prevent overlap with the header */
 }
 
 .welcome-box {
@@ -12,13 +11,11 @@
 
 .welcome-image img {
   max-width: 100%;
-  padding-top: 10%; /* Add top padding here */
 }
 
 .welcome-content {
   flex: 1;
   margin-left: 20px;
-  padding-top: 10%; /* Add top padding here */
 }
 
 .welcome-content h1 {
