@@ -4,7 +4,6 @@ import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
 
-
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);

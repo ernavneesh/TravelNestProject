@@ -2,10 +2,6 @@
     background-color: #49C0B6;
     color: white;
     width: 100%;
-    position: fixed; /* Make the header fixed */
-    top: 0;
-    left: 0;
-    z-index: 1000;
 }
 
 .main-nav {
@@ -143,9 +139,4 @@ nav ul li a:hover {
     nav ul li a {
         font-size: 14px;
     }
-}
-
-/* Add a margin to the content below the header to prevent overlap */
-body {
-    margin-top: 110px; /* Adjust this value if the header height changes */
 }
