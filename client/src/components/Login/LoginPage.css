@@ -15,32 +15,33 @@ body, html {
     z-index: 1000;
 }
 
-.login-page {
+.login-page_loginPageStyle {
     display: flex;
     height: calc(100vh - 80px); /* Adjust based on the header height */
     margin-top: 80px; /* Adjust based on the header height */
     font-family: 'Arial', sans-serif;
 }
 
-.login-container {
+.login-container_loginPageStyle {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: center;
 }
 
-.login-image {
+.login-image_loginPageStyle {
     width: 50%;
     height: 98%;
+
 }
 
-.login-image img {
+.login-image_loginPageStyle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.login-form {
+.login-form_loginPageStyle {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -50,23 +51,23 @@ body, html {
     background-color: white;
 }
 
-.login-form h2 {
+.login-form_loginPageStyle h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
 }
 
-.form-group {
+.form-group_loginPageStyle {
     margin-bottom: 1rem;
     width: 100%;
 }
 
-.form-group label {
+.form-group_loginPageStyle label {
     display: block;
     margin-bottom: 0.5rem;
     font-size: 1rem;
 }
 
-.form-group input {
+.form-group_loginPageStyle input {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
@@ -74,7 +75,7 @@ body, html {
     border-radius: 4px;
 }
 
-.login-button, .register-button {
+.login-button_loginPageStyle, .register-button_loginPageStyle {
     width: 100%;
     padding: 0.75rem;
     font-size: 1rem;
@@ -87,16 +88,16 @@ body, html {
     text-align: center;
 }
 
-.register-button {
+.register-button_loginPageStyle {
     background-color: #f0f0f0;
     color: black;
 }
 
-.login-button:hover, .register-button:hover {
+.login-button_loginPageStyle:hover, .register-button_loginPageStyle:hover {
     opacity: 0.8;
 }
 
-.logout-button {
+.logout-button_loginPageStyle {
     background: none;
     border: none;
     color: white;

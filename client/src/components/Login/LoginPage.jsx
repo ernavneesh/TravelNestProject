@@ -33,10 +33,11 @@ const LoginPage = () => {
             }
 
             const data = await response.json();
-            console.log('Login successful:', data);
+            console.log('Full response:', data); // Log the entire response object
 
-            const username = email.split('@')[0];
-            handleLogin(username);
+            const { firstName, email, _id: userId } = data.UserInfo; // Extract firstName, email, and userId from the response
+            console.log('User info from response:', firstName, email, userId); // Log user info for debugging
+            handleLogin(firstName, email, userId);
 
             navigate('/');
         } catch (error) {
@@ -45,15 +46,15 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="login-page">
-            <div className="login-container">
-                <div className="login-image">
+        <div className="login-page_loginPageStyle">
+            <div className="login-container_loginPageStyle">
+                <div className="login-image_loginPageStyle">
                     <img src={loginImage} alt="Login" />
                 </div>
-                <div className="login-form">
+                <div className="login-form_loginPageStyle">
                     <form onSubmit={handleLoginSubmit}>
                         <h2>Login</h2>
-                        <div className="form-group">
+                        <div className="form-group_loginPageStyle">
                             <label htmlFor="email">Email:</label>
                             <input
                                 type="email"
@@ -64,7 +65,7 @@ const LoginPage = () => {
                                 required
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group_loginPageStyle">
                             <label htmlFor="password">Password:</label>
                             <input
                                 type="password"
@@ -75,12 +76,12 @@ const LoginPage = () => {
                                 required
                             />
                         </div>
-                        <button type="submit" className="login-button">
+                        <button type="submit" className="login-button_loginPageStyle">
                             Login
                         </button>
                     </form>
                     <button
-                        className="register-button"
+                        className="register-button_loginPageStyle"
                         onClick={() => (window.location.href = '/register')}
                     >
                         Go to Registration

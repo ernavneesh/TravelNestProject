@@ -8,14 +8,8 @@ const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [destinations, setDestinations] = useState([]);
-    const [clickCounts, setClickCounts] = useState({
-        vietnam: 0,
-        laos: 0,
-        cambodia: 0,
-        thailand: 0
-    });
     const dropdownRef = useRef(null);
-    const { username, handleLogout } = useContext(SessionContext);
+    const { userInfo, handleLogout } = useContext(SessionContext);
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -29,14 +23,6 @@ const Header = () => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
             setDropdownOpen(false);
         }
-    };
-
-    const handleDropdownItemClick = (item) => {
-        setClickCounts(prevCounts => ({
-            ...prevCounts,
-            [item]: prevCounts[item] + 1
-        }));
-        console.log(`Clicked on ${item}. Count: ${clickCounts[item] + 1}`);
     };
 
     useEffect(() => {
@@ -62,7 +48,7 @@ const Header = () => {
     return (
         <header className="header">
             <div className="main-nav">
-                <img src={logo} alt="Viland Travel Logo" className="logo" style={{ height: '80px' }} />
+                <img src={logo} alt="Viland Travel Logo" className="logo" />
                 <button className="menu-toggle" onClick={handleMenuToggle}>
                     ☰
                 </button>
@@ -77,31 +63,19 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                            <Link to={`/destinations/${destination._id}`} onClick={() => handleDropdownItemClick(destination.destinationName)}>
+                                            <Link to={`/destinations/${destination._id}`}>
                                                 {destination.destinationName}
                                             </Link>
                                         </li>
                                     ))}
-                                    <li><a href="#vietnam" onClick={() => handleDropdownItemClick('vietnam')}>
-                                        Vietnam
-                                    </a></li>
-                                    <li><a href="#laos" onClick={() => handleDropdownItemClick('laos')}>
-                                        Laos
-                                    </a></li>
-                                    <li><a href="#cambodia" onClick={() => handleDropdownItemClick('cambodia')}>
-                                        Cambodia
-                                    </a></li>
-                                    <li><a href="#thailand" onClick={() => handleDropdownItemClick('thailand')}>
-                                        Thailand
-                                    </a></li>
                                 </ul>
                             )}
                         </li>
                         <li><a href="/about-us">About Us</a></li>
-                        {username ? (
+                        {userInfo && userInfo.firstName ? (
                             <>
-                                <li>Welcome, {username}</li>
-                                <li><button onClick={handleLogout} className="logout-button">Logout</button></li>
+                                <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
+                                <li><button onClick={handleLogout} className="logout-button_loginPageStyle" style={{ fontSize: '1.18em' }}>Logout</button></li>
                             </>
                         ) : (
                             <li><Link to="/login">Login/Register</Link></li>
