@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import './Header.css';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import './Header.css';
 import logo from '../../assets/images/logo.png';
+import { SessionContext } from '../../context/SessionContext';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
+    const { userInfo, handleLogout } = useContext(SessionContext);
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -61,16 +63,23 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                        <Link to={`/destinations/${destination._id}`}>
-                                            {destination.destinationName}
-                                        </Link>
-                                    </li>
+                                            <Link to={`/destinations/${destination._id}`}>
+                                                {destination.destinationName}
+                                            </Link>
+                                        </li>
                                     ))}
                                 </ul>
                             )}
                         </li>
                         <li><a href="/about-us">About Us</a></li>
-                        <li><a href="/login">Login/Register</a></li>
+                        {userInfo && userInfo.firstName ? (
+                            <>
+                                <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
+                                <li><button onClick={handleLogout} className="logout-button_loginPageStyle" style={{ fontSize: '1.18em' }}>Logout</button></li>
+                            </>
+                        ) : (
+                            <li><Link to="/login">Login/Register</Link></li>
+                        )}
                     </ul>
                 </nav>
             </div>
