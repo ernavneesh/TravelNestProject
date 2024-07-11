@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DestinationCard.css';
-import { SessionContext } from '../../context/SessionContext';
 
-function DestinationCard({ destination, discount, onClick, clickCount }) {
+function DestinationCard({ destination, discount, onClick, clickCount, clickCount }) {
   const navigate = useNavigate();
-  const { userInfo } = useContext(SessionContext);
   const imageUrl = `http://localhost:3000/${destination.image}`;
 
-  const handleCardClick = async () => {
+  const handleCardClick = () => {
     onClick();  // Call the passed onClick function to handle click count
     if (userInfo && userInfo.userId) {
       const userId = userInfo.userId;
