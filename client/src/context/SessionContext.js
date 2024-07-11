@@ -6,21 +6,23 @@ export const SessionProvider = ({ children }) => {
     const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
-        const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
+        // Check if user info exists in localStorage
+        const storedUserInfo = localStorage.getItem('userInfo');
         if (storedUserInfo) {
-            setUserInfo(storedUserInfo);
+            setUserInfo(JSON.parse(storedUserInfo));
         }
     }, []);
 
     const handleLogin = (firstName, email, userId) => {
         const userInfo = { firstName, email, userId };
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
         setUserInfo(userInfo);
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('userInfo');
         setUserInfo(null);
+        localStorage.removeItem('userInfo');
+        window.location.href = '/'; // Redirect to homepage after logout
     };
 
     return (
