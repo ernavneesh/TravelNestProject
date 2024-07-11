@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './DestinationCard.css';
 import { SessionContext } from '../../context/SessionContext';
 
-function DestinationCard({ destination, onClick }) {
+function DestinationCard({ destination, onClick, clickCount }) {
   const navigate = useNavigate();
   const { userInfo } = useContext(SessionContext);
   const imageUrl = `http://localhost:3000/${destination.image}`;
@@ -44,7 +44,7 @@ function DestinationCard({ destination, onClick }) {
   return (
     <div className="destination-card" onClick={handleCardClick}>
       <span className="tour-featured">Discount Available</span>
-      <img src={imageUrl} alt={destination.destinationName} className="destination-image" />
+      <img src={imageUrl} alt={destination.destinationName} className="destination-image"/>
       <div className='destination-info'>
         <h3>{destination.destinationName}</h3>
       </div>
