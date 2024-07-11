@@ -10,9 +10,10 @@ function DestinationCard({ destination, onClick }) {
 
   const handleCardClick = async () => {
     onClick();  // Call the passed onClick function to handle click count
+    const destinationId = destination._id;
+
     if (userInfo && userInfo.userId) {
       const userId = userInfo.userId;
-      const destinationId = destination._id;
 
       try {
         const response = await fetch('http://localhost:3000/api/userAnalysis', {
@@ -32,11 +33,12 @@ function DestinationCard({ destination, onClick }) {
       } catch (error) {
         console.error('Error posting data:', error);
       }
-
-      navigate(`/destinations/${destinationId}`);  // Navigate to the destination details page
     } else {
       console.log('User is not logged in.');
     }
+
+    // Navigate to the destination details page regardless of login status
+    navigate(`/destinations/${destinationId}`);
   };
 
   return (

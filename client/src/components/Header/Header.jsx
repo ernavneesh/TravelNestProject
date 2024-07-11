@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
@@ -10,6 +10,7 @@ const Header = () => {
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
     const { userInfo, handleLogout } = useContext(SessionContext);
+    const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -45,6 +46,44 @@ const Header = () => {
         fetchData();
     }, []);
 
+    const handleDestinationClick = async (destinationId) => {
+        if (userInfo && userInfo.userId) {
+            const userId = userInfo.userId;
+            const dataToSend = {
+                userId: userId,
+                destinationId: destinationId
+            };
+
+            console.log('Data being sent to useranalysis API:', dataToSend);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/useranalysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to send user analysis data');
+                }
+
+                const result = await response.json();
+                console.log('Post response:', result);
+
+                // Navigate to the destination details page
+                navigate(`/destinations/${destinationId}`);
+            } catch (error) {
+                console.error('Error sending user analysis data:', error);
+            }
+        } else {
+            console.log('User is not logged in.');
+            // Navigate to the destination details page even if the user is not logged in
+            navigate(`/destinations/${destinationId}`);
+        }
+    };
+
     return (
         <header className="header">
             <div className="main-nav">
@@ -63,11 +102,12 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                            <Link
-                                                to={`/destinations/${destination._id}`}
+                                            <a
+                                                href="#"
+                                                onClick={() => handleDestinationClick(destination._id)}
                                             >
                                                 {destination.destinationName}
-                                            </Link>
+                                            </a>
                                         </li>
                                     ))}
                                 </ul>
