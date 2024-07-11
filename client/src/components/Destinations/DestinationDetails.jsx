@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { SessionContext } from '../../context/SessionContext';
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 import './DestinationDetails.css';
 
 function DestinationDetails() {
@@ -73,10 +70,7 @@ function DestinationDetails() {
           body: JSON.stringify({
             userId: userId,
             destinationId: destinationId
-<<<<<<< Updated upstream
             
-=======
->>>>>>> Stashed changes
           })
         });
 
@@ -149,7 +143,7 @@ function DestinationDetails() {
                   <i className="fas fa-map-marker-alt">&nbsp;&nbsp;&nbsp;</i>
                   {Array.isArray(pkg.locations) ? pkg.locations.join(' - ') : pkg.locations}
                 </div>
-                <p className="entry-price">No of days: {pkg.noOfDays} &nbsp;&nbsp;&nbsp;&nbsp;Price: {pkg.amountPerPerson}</p>
+                <p className="entry-price">No of day : {pkg.noOfDays} &nbsp;&nbsp;&nbsp;&nbsp;Price : {pkg.amountPerPerson}</p>
               </div>
             </div>
           </article>

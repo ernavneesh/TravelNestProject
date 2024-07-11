@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
@@ -10,7 +10,6 @@ const Header = () => {
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
     const { userInfo, handleLogout } = useContext(SessionContext);
-    const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -49,38 +48,31 @@ const Header = () => {
     const handleDestinationClick = async (destinationId) => {
         if (userInfo && userInfo.userId) {
             const userId = userInfo.userId;
-            const dataToSend = {
-                userId: userId,
-                destinationId: destinationId
-            };
-
-            console.log('Data being sent to useranalysis API:', dataToSend);
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('destinationId', destinationId);
+            console.log('User ID:', userId);
+            console.log('Destination ID:', destinationId);
 
             try {
-                const response = await fetch('http://localhost:3000/api/useranalysis', {
+                const response = await fetch('http://localhost:3000/api/userAnalysis', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(dataToSend)
+                    body: JSON.stringify({ userId, destinationId }),
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to send user analysis data');
+                    throw new Error('Network response was not ok');
                 }
 
                 const result = await response.json();
                 console.log('Post response:', result);
-
-                // Navigate to the destination details page
-                navigate(`/destinations/${destinationId}`);
             } catch (error) {
-                console.error('Error sending user analysis data:', error);
+                console.error('Error posting data:', error);
             }
         } else {
             console.log('User is not logged in.');
-            // Navigate to the destination details page even if the user is not logged in
-            navigate(`/destinations/${destinationId}`);
         }
     };
 
@@ -93,7 +85,7 @@ const Header = () => {
                 </button>
                 <nav className={menuOpen ? 'open' : ''}>
                     <ul>
-                        <li><Link to="/">Home</Link></li>
+                        <li><a href="/">Home</a></li>
                         <li className="dropdown" ref={dropdownRef}>
                             <a href="#destination" onClick={handleDropdownToggle}>
                                 Destinations
@@ -102,18 +94,18 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                            <a
-                                                href="#"
+                                            <Link
+                                                to={`/destinations/${destination._id}`}
                                                 onClick={() => handleDestinationClick(destination._id)}
                                             >
                                                 {destination.destinationName}
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
                             )}
                         </li>
-                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><a href="/about-us">About Us</a></li>
                         {userInfo && userInfo.firstName ? (
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
