@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DestinationCard.css';
 
-function DestinationCard({ destination, onClick, clickCount }) {
+function DestinationCard({ destination, discount, onClick, clickCount }) {
   const navigate = useNavigate();
   const imageUrl = `http://localhost:3000/${destination.image}`;
 
@@ -11,9 +11,17 @@ function DestinationCard({ destination, onClick, clickCount }) {
     navigate(`/destinations/${destination._id}`);  // Navigate to the destination details page
   };
 
+  const destinationDiscount = (discount && discount.length > 0) 
+    ? discount.find(discount => discount.destinationId === destination._id) 
+    : null;
+
   return (
     <div className="destination-card" onClick={handleCardClick}>
-      <span className="tour-featured">Discount Available</span>
+      {destinationDiscount && (
+        <span className="tour-featured">
+          {destinationDiscount.discountPercentage}% Discount Available 
+        </span>
+      )}
       <img src={imageUrl} alt={destination.destinationName} className="destination-image"/>
       <div className='destination-info'>
         <h3>{destination.destinationName}</h3>

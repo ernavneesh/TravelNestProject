@@ -109,6 +109,8 @@ const Header = () => {
                         {userInfo && userInfo.firstName ? (
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
+                                <li><a href="/mybookings">My Bookings</a></li>
+                                
                                 <li>
                                     <button
                                         onClick={handleLogout}
