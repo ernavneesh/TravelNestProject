@@ -45,6 +45,37 @@ const Header = () => {
         fetchData();
     }, []);
 
+    const handleDestinationClick = async (destinationId) => {
+        if (userInfo && userInfo.userId) {
+            const userId = userInfo.userId;
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('destinationId', destinationId);
+            console.log('User ID:', userId);
+            console.log('Destination ID:', destinationId);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/userAnalysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, destinationId }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                console.log('Post response:', result);
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        } else {
+            console.log('User is not logged in.');
+        }
+    };
+
     return (
         <header className="header">
             <div className="main-nav">
@@ -54,7 +85,7 @@ const Header = () => {
                 </button>
                 <nav className={menuOpen ? 'open' : ''}>
                     <ul>
-                        <li><Link to="/">Home</Link></li>
+                        <li><a href="/">Home</a></li>
                         <li className="dropdown" ref={dropdownRef}>
                             <a href="#destination" onClick={handleDropdownToggle}>
                                 Destinations
@@ -65,6 +96,7 @@ const Header = () => {
                                         <li key={destination._id}>
                                             <Link
                                                 to={`/destinations/${destination._id}`}
+                                                onClick={() => handleDestinationClick(destination._id)}
                                             >
                                                 {destination.destinationName}
                                             </Link>
@@ -73,7 +105,7 @@ const Header = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><a href="/about-us">About Us</a></li>
                         {userInfo && userInfo.firstName ? (
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
