@@ -5,9 +5,9 @@ body, html {
     height: 100%;
     width: 100%;
     font-family: 'Arial', sans-serif;
-}
+}       
 
-.header {
+.header_custom {
     width: 100%;
     position: fixed;
     top: 0;
@@ -31,8 +31,8 @@ body, html {
 
 .login-image_loginPageStyle {
     width: 50%;
-    height: 98%;
-
+    height: 100% ;
+    
 }
 
 .login-image_loginPageStyle img {
