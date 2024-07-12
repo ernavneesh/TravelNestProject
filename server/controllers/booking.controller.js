@@ -15,22 +15,15 @@ exports.bookPackage = async (req, res) => {
         totalAmount
     } = req.body;
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
         let discount;
         if (discountId) {
-            discount = await Discount.findById(discountId).session(session);
+            discount = await Discount.findById(discountId);
             if (!discount) {
-                await session.abortTransaction();
-                session.endSession();
                 return res.status(404).json({ error: 'Discount not found' });
             }
 
             if (discount.status !== 'active') {
-                await session.abortTransaction();
-                session.endSession();
                 return res.status(400).json({ error: 'Discount is not active' });
             }
         }
@@ -47,20 +40,28 @@ exports.bookPackage = async (req, res) => {
             totalAmount
         });
 
-        await newBooking.save({ session });
+        await newBooking.save();
 
         if (discount) {
             discount.status = 'used';
-            await discount.save({ session });
+            await discount.save();
         }
-
-        await session.commitTransaction();
-        session.endSession();
 
         res.status(201).json(newBooking);
     } catch (error) {
-        await session.abortTransaction();
-        session.endSession();
+        console.log(error);
         res.status(500).send({ error: 'Failed to book package' });
+    }
+};
+
+exports.getBookingByUserId = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const bookings = await Booking.find({ userId }).populate('packageId').populate('discountId');
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error: 'Failed to get bookings' });
     }
 };
