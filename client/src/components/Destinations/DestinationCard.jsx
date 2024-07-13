@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DestinationCard.css';
+import { SessionContext } from '../../context/SessionContext';
 
 function DestinationCard({ destination, discount, onClick, clickCount, clickCount }) {
   const navigate = useNavigate();
+  const { userInfo } = useContext(SessionContext);
   const imageUrl = `http://localhost:3000/${destination.image}`;
 
-  const handleCardClick = () => {
+  const handleCardClick = async () => {
     onClick();  // Call the passed onClick function to handle click count
+    const destinationId = destination._id;
+
     if (userInfo && userInfo.userId) {
       const userId = userInfo.userId;
-      const destinationId = destination._id;
 
       try {
         const response = await fetch('http://localhost:3000/api/userAnalysis', {
@@ -30,16 +33,13 @@ function DestinationCard({ destination, discount, onClick, clickCount, clickCoun
       } catch (error) {
         console.error('Error posting data:', error);
       }
-
-      navigate(`/destinations/${destinationId}`);  // Navigate to the destination details page
     } else {
       console.log('User is not logged in.');
     }
-  };
 
-  const destinationDiscount = (discount && discount.length > 0) 
-    ? discount.find(discount => discount.destinationId === destination._id) 
-    : null;
+    // Navigate to the destination details page regardless of login status
+    navigate(`/destinations/${destinationId}`);
+  };
 
   return (
     <div className="destination-card" onClick={handleCardClick}>
