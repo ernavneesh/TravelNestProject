@@ -3,17 +3,17 @@ const mongoose = require('mongoose');
 const BookingSchema = mongoose.Schema({
     packageId: {
         type: mongoose.Types.ObjectId,
-        ref: 'package',
+        ref: 'Package',
         required: true
     },
     userId: {
         type: mongoose.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: true
     },
-    discoutId: {
+    discountId: {
         type: mongoose.Types.ObjectId,
-        ref: 'discount',
+        ref: 'Discount',
         default:null
     },
     noOfPerson: {
