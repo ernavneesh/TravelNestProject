@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './DestinationCard.css';
 import { SessionContext } from '../../context/SessionContext';
 
-function DestinationCard({ destination, discount, onClick, clickCount, clickCount }) {
+function DestinationCard({ destination, discount, onClick, clickCount }) {
   const navigate = useNavigate();
   const { userInfo } = useContext(SessionContext);
   const imageUrl = `http://localhost:3000/${destination.image}`;
@@ -40,6 +40,10 @@ function DestinationCard({ destination, discount, onClick, clickCount, clickCoun
     // Navigate to the destination details page regardless of login status
     navigate(`/destinations/${destinationId}`);
   };
+ 
+  const destinationDiscount = (discount && discount.length > 0) 
+    ? discount.find(discount => discount.destinationId === destination._id) 
+    : null;
 
   return (
     <div className="destination-card" onClick={handleCardClick}>

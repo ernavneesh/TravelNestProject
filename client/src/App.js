@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BookingDetails from './components/BookingDetails/BookingDetails';
 import Processing from './components/BookingDetails/Processing';
 import { SessionProvider } from './context/SessionContext';
+import MyBookings from './components/MyBookings/MyBookings';
 
 function App() {
   return (
@@ -18,13 +19,14 @@ function App() {
           <Header />
           <div className="content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Destinations />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
               <Route path="/bookinginfo" element={<BookingDetails />} />
-              <Route path="/processing" element={<Processing/>} />       
+              <Route path="/processing" element={<Processing />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/mybookings" element={<MyBookings />} />
             </Routes>
           </div>
           <Footer />
@@ -34,10 +36,5 @@ function App() {
   );
 }
 
-const Home = () => (
-  <>
-    <Destinations />
-  </>
-);
 
 export default App;

@@ -1,13 +1,15 @@
-// Destinations.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import DestinationCard from './DestinationCard';
 import Search from '../Search/Search';
 import './Destinations.css';
+import { SessionContext } from '../../context/SessionContext'; 
 
 function Destinations() {
   const [destinations, setDestinations] = useState([]);
   const [clickCounts, setClickCounts] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [discount, setDiscount] = useState(null);
+  const { userInfo } = useContext(SessionContext); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +23,23 @@ function Destinations() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchDiscount = async () => {
+      try {
+        if (userInfo) {
+          const userId = userInfo.userId;
+          const response = await fetch(`http://localhost:3000/api/discount/active-discounts/${userId}`);
+          const data = await response.json();
+          setDiscount(data);
+        }
+      } catch (error) {
+        console.error('Error fetching discount:', error);
+      }
+    };
+
+    fetchDiscount();
+  }, [userInfo]);
 
   const handleCardClick = (destinationId) => {
     setClickCounts((prevCounts) => {
@@ -47,6 +66,7 @@ function Destinations() {
             <DestinationCard
               key={destination._id}
               destination={destination}
+              discount={discount}
               onClick={() => handleCardClick(destination._id)}
               clickCount={clickCounts[destination._id]}
             />
