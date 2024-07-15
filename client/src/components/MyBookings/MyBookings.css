@@ -1,0 +1,141 @@
+.my-bookings {
+  padding: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.booking-card {
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-size: 14px; 
+}
+
+.booking-summary {
+  background-color: #f9f9f9;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.booking-summary:hover {
+  background-color: #f0f0f0;
+}
+
+
+.booking-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.booking-details {
+  background-color: #fff;
+  padding: 5px;
+  border-top: 1px solid #ddd;
+}
+
+.person-card {
+  margin-top: 10px;
+  padding: 3px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.review-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.review-button:hover {
+  background-color: #0056b3;
+}
+
+.review-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.review-popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.review-popup h3 {
+  margin-bottom: 10px;
+}
+
+.star-rating {
+  margin: 20px 0;
+}
+
+.star-rating span {
+  font-size: 30px;
+  cursor: pointer;
+  color: #ddd;
+}
+
+.star-rating .filled {
+  color: #ffc107;
+}
+
+.review-textarea {
+  width: 90%;
+  height: 100px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: none;
+  font-family: Arial, sans-serif;
+}
+
+.review-popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.post-button, .cancel-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.post-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.post-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}

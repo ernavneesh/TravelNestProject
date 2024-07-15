@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
+import { SessionContext } from '../../context/SessionContext';
 
 const Header = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
+    const { userInfo, handleLogout } = useContext(SessionContext);
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -43,6 +45,37 @@ const Header = () => {
         fetchData();
     }, []);
 
+    const handleDestinationClick = async (destinationId) => {
+        if (userInfo && userInfo.userId) {
+            const userId = userInfo.userId;
+            localStorage.setItem('userId', userId);
+            localStorage.setItem('destinationId', destinationId);
+            console.log('User ID:', userId);
+            console.log('Destination ID:', destinationId);
+
+            try {
+                const response = await fetch('http://localhost:3000/api/userAnalysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, destinationId }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                console.log('Post response:', result);
+            } catch (error) {
+                console.error('Error posting data:', error);
+            }
+        } else {
+            console.log('User is not logged in.');
+        }
+    };
+
     return (
         <header className="header">
             <div className="main-nav">
@@ -61,18 +94,36 @@ const Header = () => {
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
                                         <li key={destination._id}>
-                                        <Link to={`/destinations/${destination._id}`}>
-                                            {destination.destinationName}
-                                        </Link>
-                                    </li>
+                                            <Link
+                                                to={`/destinations/${destination._id}`}
+                                                onClick={() => handleDestinationClick(destination._id)}
+                                            >
+                                                {destination.destinationName}
+                                            </Link>
+                                        </li>
                                     ))}
                                 </ul>
                             )}
                         </li>
                         <li><a href="/about-us">About Us</a></li>
-                        {/*<li><a href="/login">Login/Register</a></li>*/}
-                        <li><Link to="/register">Login/Register</Link></li>
-                    
+                        {userInfo && userInfo.firstName ? (
+                            <>
+                                <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
+                                <li><a href="/mybookings">My Bookings</a></li>
+                                
+                                <li>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="logout-button_loginPageStyle"
+                                        style={{ fontSize: '1.18em' }}
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <li><Link to="/login">Login/Register</Link></li>
+                        )}
                     </ul>
                 </nav>
             </div>

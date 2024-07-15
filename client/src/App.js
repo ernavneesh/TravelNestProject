@@ -7,35 +7,37 @@ import Destinations from './components/Destinations/Destinations';
 import PackageDetails from './PackageDetails'; 
 import DestinationDetails from './components/Destinations/DestinationDetails';
 import AboutUs from './components/AboutUs/AboutUs';
-import Registration from './components/Registration/Registration/.';
+import LoginPage from './components/Login/LoginPage';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import BookingDetails from './components/BookingDetails/BookingDetails';
+import Processing from './components/BookingDetails/Processing';
+import { SessionProvider } from './context/SessionContext';
+import MyBookings from './components/MyBookings/MyBookings';
 
 function App() {
   return (
+    <SessionProvider>
       <Router>
         <div className="App">
           <Header />
           <div className="content">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Destinations />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
-              <Route path="/register" element={<Registration />} /> {/* Add Registration route */}
-              <Route path="/package/:packageId" component={PackageDetails} />
+              <Route path="/bookinginfo" element={<BookingDetails />} />
+              <Route path="/processing" element={<Processing />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/mybookings" element={<MyBookings />} />
             </Routes>
           </div>
           <Footer />
         </div>
       </Router>
+    </SessionProvider>
   );
 }
 
-const Home = () => (
-  <div>
-    
-  
-    <Destinations />
-  </div>
-);
 
 export default App;

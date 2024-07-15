@@ -11,11 +11,6 @@ const DiscountSchema = mongoose.Schema({
         ref: 'user',
         required: true
     },
-    noOfPerson: {
-        type:Number, 
-        required: true,
-        trim: true
-    },
     offerStartDate: {
         type:Date, 
         required: true,

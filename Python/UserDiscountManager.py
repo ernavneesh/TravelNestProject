@@ -19,7 +19,7 @@ client = MongoClient(connection_string)
 db = client['travelnest']
 
 # Access the UserAnalysis, Discounts, Users, and Destinations collections
-user_analysis_collection = db['userAnalysis']
+user_analysis_collection = db['useranalyses']
 discounts_collection = db['discounts']
 users_collection = db['users']
 destinations_collection = db['destinations']
