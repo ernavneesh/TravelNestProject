@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './DestinationDetails.css';
 import { SessionContext } from '../../context/SessionContext';
 
-
 function DestinationDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -97,9 +96,6 @@ function DestinationDetails() {
         <div className="destination-name-overlay">
           <h1>{destination.destinationName}</h1>
         </div>
-        </div>
-        <div className="package-details-container">
-      
       </div>
       <br />
 
@@ -147,7 +143,6 @@ function DestinationDetails() {
           </article>
         ))}
       </div>
-      
     </div>
   );
 }

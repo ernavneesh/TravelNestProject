@@ -1,10 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Destinations from './components/Destinations/Destinations';
-import PackageDetails from './components/PackageDetails/PackageDetails'; 
 import DestinationDetails from './components/Destinations/DestinationDetails';
 import AboutUs from './components/AboutUs/AboutUs';
 import LoginPage from './components/Login/LoginPage';
