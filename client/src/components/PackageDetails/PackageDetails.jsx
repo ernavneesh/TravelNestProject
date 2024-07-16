@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './PackageDetails.css';
 
 const PackageDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [packageData, setPackageData] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [persons, setPersons] = useState(1);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -23,13 +25,21 @@ const PackageDetails = () => {
     };
 
     fetchPackageData();
-  }, [id]); 
 
-  if (!packageData) {
-    return <div>Loading...</div>;
-  }
+    // Check login status (this is a placeholder; replace with actual login check logic)
+    const loggedIn = checkLoginStatus();
+    setIsLoggedIn(loggedIn);
+  }, [id]);
 
-  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
+  const checkLoginStatus = () => {
+    // Placeholder for actual login check logic
+    // Replace this with your actual login check logic, e.g., checking a token in local storage
+    return localStorage.getItem('token') ? true : false;
+  };
+
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -38,6 +48,12 @@ const PackageDetails = () => {
   const handlePersonsChange = (event) => {
     setPersons(event.target.value);
   };
+
+  if (!packageData) {
+    return <div>Loading...</div>;
+  }
+
+  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
 
   return (
     <div>
@@ -152,15 +168,23 @@ const PackageDetails = () => {
                 <a href="#view-all-reviews" className="view-all-reviews">VIEW ALL REVIEWS</a>
               </div>
             </div>
-            <div className="booking-section">
-              <label htmlFor="persons">Select number of persons:</label>
-              <select id="persons" value={persons} onChange={handlePersonsChange}>
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
-              <button className="book-now-btn">Book Now</button>
-            </div>
+            {isLoggedIn ? (
+              <div className="booking-section">
+                <label htmlFor="persons">Select number of persons:</label>
+                <select id="persons" value={persons} onChange={handlePersonsChange}>
+                  {[0, 1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>{num}</option>
+                  ))}
+                </select>
+                <label htmlFor="travel-date">Select date of travel:</label>
+                <input type="date" id="travel-date" />
+                <button className="book-now-btn">Book Now</button>
+              </div>
+            ) : (
+              <div className="login-prompt">
+                <a href="/login" onClick={handleLoginRedirect}>Please log in to book the package and for exclusive offers</a>
+              </div>
+            )}
           </section>
         </div>
       </div>
