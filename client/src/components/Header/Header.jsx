@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
@@ -10,6 +10,7 @@ const Header = () => {
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
     const { userInfo, handleLogout } = useContext(SessionContext);
+    const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -113,7 +114,7 @@ const Header = () => {
                                 
                                 <li>
                                     <button
-                                        onClick={handleLogout}
+                                        onClick={() => handleLogout(navigate)}
                                         className="logout-button_loginPageStyle"
                                         style={{ fontSize: '1.18em' }}
                                     >
