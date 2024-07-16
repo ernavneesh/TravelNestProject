@@ -23,7 +23,7 @@ const PackageDetails = () => {
     };
 
     fetchPackageData();
-  }, [id]);
+  }, [id]); 
 
   if (!packageData) {
     return <div>Loading...</div>;

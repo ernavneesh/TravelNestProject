@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 import './DestinationDetails.css';
+
 
 function DestinationDetails() {
   const { id } = useParams();
@@ -67,6 +68,9 @@ function DestinationDetails() {
         <div className="destination-name-overlay">
           <h1>{destination.destinationName}</h1>
         </div>
+        </div>
+        <div className="package-details-container">
+      
       </div>
       <br />
 
@@ -79,6 +83,7 @@ function DestinationDetails() {
         </div>
       </div>
         <br />
+        
       <div className="destination-details">
         <h2>Trending</h2>
         <h3>Inspiring Ideas for {destination.destinationName} vacations</h3>
@@ -110,6 +115,7 @@ function DestinationDetails() {
           </article>
         ))}
       </div>
+      
     </div>
   );
 }
