@@ -36,8 +36,9 @@ const LoginPage = () => {
             console.log('Full response:', data); // Log the entire response object
 
             const { firstName, email, _id: userId } = data.UserInfo; // Extract firstName, email, and userId from the response
-            console.log('User info from response:', firstName, email, userId); // Log user info for debugging
-            handleLogin(firstName, email, userId);
+            const { token } = data; // Extract token from the response
+            console.log('User info from response:', firstName, email, userId, token); // Log user info for debugging
+            handleLogin(firstName, email, userId, token);
 
             navigate('/');
         } catch (error) {

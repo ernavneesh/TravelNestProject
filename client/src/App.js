@@ -10,8 +10,8 @@ import BookingDetails from './components/BookingDetails/BookingDetails';
 import Processing from './components/BookingDetails/Processing';
 import { SessionProvider } from './context/SessionContext';
 import MyBookings from './components/MyBookings/MyBookings';
-import Registration from './components/Registration/Registration';
-import PackageDetails from'./components/PackageDetails/PackageDetails';
+import PackageDetails from './components/PackageDetails/PackageDetails';
+
 function App() {
   return (
     <SessionProvider>
@@ -24,12 +24,11 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/destinations" element={<Destinations />} />
               <Route path="/destinations/:id" element={<DestinationDetails />} />
+              <Route path="/packages/:id" element={<PackageDetails />} />
               <Route path="/bookinginfo" element={<BookingDetails />} />
               <Route path="/processing" element={<Processing />} />
-              <Route path="/register" element={<Registration />} /> 
               <Route path="/login" element={<LoginPage />} />
               <Route path="/mybookings" element={<MyBookings />} />
-              <Route path="/packages/:id" element={<PackageDetails />} />
             </Routes>
           </div>
           <Footer />

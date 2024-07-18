@@ -1,3 +1,5 @@
+/* PackageDetails.css */
+
 html {
   scroll-behavior: smooth;
 }
@@ -5,18 +7,17 @@ html {
 .banner-container {
   position: relative;
   width: 100%;
-  height: 400px;
-  overflow: hidden;
+  height: auto;
 }
 
 .destination-image-full {
   width: 100%;
-  height: auto;
+  height: 75vh; 
   display: block;
 }
 
 .navbar {
-  position: -webkit-sticky; /* For Safari */
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   background-color: #fff;
@@ -49,7 +50,7 @@ html {
 
 .package-details-container {
   text-align: left;
-  margin-top: 20px; /* Adjusted to prevent content from being hidden behind the fixed navbar */
+  margin-top: 20px; 
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
@@ -60,10 +61,10 @@ html {
 }
 
 .package-name {
-  font-size: 24px; /* Increase the font size */
+  font-size: 24px; 
   font-weight: bold;
   color: #333;
-  text-align: left; /* Align text to the left */
+  text-align: left; 
 }
 
 .details {
@@ -80,7 +81,7 @@ html {
 }
 
 .share-link {
-  color: #800080; /* Purple color for the Share link */
+  color: #800080; 
   text-decoration: none;
 }
 
@@ -170,7 +171,6 @@ html {
   font-size: 18px;
 }
 
-/* Additional styles for itinerary */
 .itinerary-item {
   margin-bottom: 10px;
 }
@@ -214,7 +214,6 @@ html {
   margin: 10px 0;
 }
 
-/* Styles for Useful Information */
 #information .info-section {
   display: flex;
   flex-wrap: wrap;
@@ -229,11 +228,11 @@ html {
 }
 
 .info-include {
-  background-color: #e0f7fa; /* Light blue background */
+  background-color: #e0f7fa; 
 }
 
 .info-exclude {
-  background-color: #fff3e0; /* Light orange background */
+  background-color: #fff3e0; 
 }
 
 #information h3 {
@@ -266,7 +265,6 @@ html {
   font-size: 16px;
 }
 
-/* Styles for Reviews */
 #reviews {
   margin-top: 20px;
 }
@@ -277,15 +275,14 @@ html {
   justify-content: center;
 }
 
-.tripadvisor-logo img {
-  width: 50px; /* Adjust the size as needed */
+.tripadvisor-logo {
+  max-width: 150px;
   height: auto;
-  margin-right: 10px;
-  vertical-align: middle;
+  margin-right: 20px;
 }
 
 .review-rating {
-  text-align: center;
+  text-align: left;
 }
 
 .rating-value {
@@ -319,9 +316,10 @@ html {
   text-decoration: underline;
 }
 
-/* Styles for Booking Section */
 .booking-section {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 20px;
 }
 
@@ -331,12 +329,6 @@ html {
 }
 
 .booking-section select {
-  padding: 5px;
-  font-size: 16px;
-  margin-right: 20px;
-}
-
-.booking-section input[type="date"] {
   padding: 5px;
   font-size: 16px;
   margin-right: 20px;
@@ -355,76 +347,6 @@ html {
   background-color: #007e5a;
 }
 
-.login-prompt {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.login-prompt a {
-  font-size: 16px;
-  color: #00a680;
-  text-decoration: none;
-}
-
-.login-prompt a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive styles for Booking Section */
-@media (max-width: 768px) {
-  .booking-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .booking-section label {
-    margin-bottom: 10px;
-    margin-right: 0;
-  }
-
-  .booking-section select,
-  .booking-section input[type="date"] {
-    margin-bottom: 10px;
-    margin-right: 0;
-    width: 80%;
-  }
-
-  .book-now-btn {
-    width: 80%;
-  }
-}
-
-@media (max-width: 480px) {
-  .booking-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .booking-section label {
-    font-size: 14px;
-    margin-bottom: 8px;
-    margin-right: 0;
-  }
-
-  .booking-section select,
-  .booking-section input[type="date"] {
-    font-size: 14px;
-    margin-bottom: 8px;
-    margin-right: 0;
-    width: 100%;
-  }
-
-  .book-now-btn {
-    font-size: 14px;
-    padding: 8px 16px;
-    width: 100%;
-  }
-}
-
-
-/* Responsive styles */
 @media (max-width: 1200px) {
   .links li a {
     font-size: 22px;
@@ -505,4 +427,35 @@ html {
   #information .info-section {
     flex-direction: column;
   }
+}
+
+
+.persons-input, .date-input {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.book-now-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.book-now-btn:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
 }
