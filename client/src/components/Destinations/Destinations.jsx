@@ -29,7 +29,17 @@ function Destinations() {
       try {
         if (userInfo) {
           const userId = userInfo.userId;
-          const response = await fetch(`http://localhost:3000/api/discount/active-discounts/${userId}`);
+          const token =  userInfo.token;
+          const response = await fetch(`http://localhost:3000/api/discount/active-discounts/${userId}`, {
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `${token}`,
+          }
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
           const data = await response.json();
           setDiscount(data);
         }
@@ -44,7 +54,6 @@ function Destinations() {
   const handleCardClick = (destinationId) => {
     setClickCounts((prevCounts) => {
       const newCount = (prevCounts[destinationId] || 0) + 1;
-      console.log(`Clicked on destination with ID ${destinationId}, Click count: ${newCount}`);
       return { ...prevCounts, [destinationId]: newCount };
     });
   };

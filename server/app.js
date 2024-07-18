@@ -12,6 +12,7 @@ const cors = require('cors');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const Booking = require('./models/booking.model');
+const Review = require('./models/review.model')
 require('dotenv').config();
 
 const app = express();
@@ -26,6 +27,21 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
     res.send('<h1>Hello, Express.js Server!</h1>');
 });
+
+
+// Booking route
+app.get('/api/bookPackage/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const bookings = await Booking.find({ userId }).populate('packageId').populate('discountId').exec();
+    res.json(bookings);
+  } catch (err) {
+    console.error('Error fetching bookings:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 // Other routes
 app.use('/api/users', userRoutes);

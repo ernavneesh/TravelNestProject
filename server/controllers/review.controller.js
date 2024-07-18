@@ -2,11 +2,12 @@ const Review = require('../models/review.model');
 const mongoose = require('mongoose');
 
 exports.addReview = async (req, res) => {
-    const { packageId, userId, rating, reviewDescription } = req.body;
+    const { packageId, bookingId, userId, rating, reviewDescription } = req.body;
 
     try {
         const newReview = new Review({
             packageId,
+            bookingId,
             userId,
             rating,
             reviewDescription,
@@ -36,5 +37,20 @@ exports.getReviewsByPackage = async (req, res) => {
         res.status(200).json({ reviews, averageRating });
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch reviews' });
+    }
+};
+
+exports.getReviewByBookingId = async (req, res) => {
+    const { bookingId } = req.params;
+    try {
+        const review = await Review.findOne({ bookingId : bookingId });
+
+        if (!review) {
+            return res.status(404).json({ error: 'No review found for this user and booking' });
+        }
+        res.status(200).json(review);
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch review' });
+
     }
 };
