@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { SessionContext } from '../../context/SessionContext';
 import './PackageDetails.css';
+import tripadvisor from '../../assets/images/tripadvisor-logo.png';
 
-const PackageDetails = ({ isLoggedIn }) => {
+const PackageDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [packageData, setPackageData] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [persons, setPersons] = useState(0);
-  const [travelDate, setTravelDate] = useState('');
+  const [persons, setPersons] = useState('');
+  const [dateOfTravel, setDateOfTravel] = useState('');
+  const [error, setError] = useState('');
+  const [discountDetails, setDiscountDetails] = useState(null);
+  const { userInfo } = useContext(SessionContext); 
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -27,11 +32,35 @@ const PackageDetails = ({ isLoggedIn }) => {
     fetchPackageData();
   }, [id]);
 
-  if (!packageData) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    const fetchDiscountDetails = async () => {
+      if (userInfo) {
+        const userId = userInfo.userId;
+        const token = userInfo.token;
+        try {
+          const response = await fetch(`http://localhost:3000/api/discount/active-discounts/${userId}`, {
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `${token}`,
+            }
+          });
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const discounts = await response.json();
+          const relevantDiscount = discounts.find(discount => discount.destinationId === packageData.destinationId);
+          setDiscountDetails(relevantDiscount);
+          console.log("relevantDiscount :", relevantDiscount);
+        } catch (error) {
+          console.error('Error fetching discount details:', error);
+        }
+      }
+    };
 
-  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
+    if (packageData) {
+      fetchDiscountDetails();
+    }
+  }, [userInfo, packageData]);
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -41,13 +70,56 @@ const PackageDetails = ({ isLoggedIn }) => {
     setPersons(event.target.value);
   };
 
-  const handleTravelDateChange = (event) => {
-    setTravelDate(event.target.value);
+  const handleDateChange = (event) => {
+    setDateOfTravel(event.target.value);
   };
 
-  const handleLoginRedirect = () => {
-    navigate('/login');
+  const handleBookNow = () => {
+    const today = new Date().toISOString().split('T')[0];
+    if (!persons || !dateOfTravel) {
+      setError('Please select number of persons and date of travel.');
+    } else if (dateOfTravel <= today) {
+      setError('Date of travel must be later than today.');
+    } else {
+      setError('');
+      navigate('/bookinginfo', {
+        state: {
+          packageId: id,
+          persons,
+          dateOfTravel,
+          packageName: packageData.packageName,
+          amountPerPerson: packageData.amountPerPerson,
+          ...(discountDetails && {
+            discountId: discountDetails._id,
+            discountPercentage: discountDetails.discountPercentage,
+            promoCode: discountDetails.promoCode,
+          }),
+          location: packageData.locations,
+          noOfDays: packageData.noOfDays
+        }
+      });
+      console.log("Booking Details Sent:", {
+        packageId: id,
+        persons,
+        dateOfTravel,
+        packageName: packageData.packageName,
+        amountPerPerson: packageData.amountPerPerson,
+        ...(discountDetails && {
+          discountId: discountDetails.discountId,
+          discountPercentage: discountDetails.percentage,
+          promoCode: discountDetails.promoCode,
+        }),
+        location: packageData.locations,
+        noOfDays: packageData.noOfDays
+      });
+    }
   };
+
+  if (!packageData) {
+    return <div>Loading...</div>;
+  }
+
+  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
 
   return (
     <div>
@@ -116,7 +188,7 @@ const PackageDetails = ({ isLoggedIn }) => {
 
           <section id="information">
             <h2>Useful Information</h2>
-            <p>This sample itinerary was created by our travel experts as inspiration for your next trip. Ready for your customization. You pick to suit your budget, desires, and cultural experiences. The price of this trip will vary, depending on the number of people in your party, dates of departure, and the availability of ground services. Please click on Inquire Now (above) and give us the necessary information to enable us to send you a FREE personalized quote within 48 hours if not sooner!</p>
+            <p>This sample itinerary was created by our travel experts as inspiration for your next trip. Ready for your customization. You pick to suit your budget, desires, and cultural experiences. The price of this trip will vary, depending on the number of people in your party, dates of departure, and the availability of ground services. Please click on Inquire Now (above) and give us the necessary information to enable us to send you a FREE personalized quote within 24 hours if not sooner!</p>
             <div className="info-section">
               <div className="info-include">
                 <h3>Our Service Include:</h3>
@@ -129,7 +201,6 @@ const PackageDetails = ({ isLoggedIn }) => {
                   <li>Boat trip as mentioned in the itinerary.</li>
                   <li>All flights within Vietnam and Cambodia.</li>
                   <li>Drinking water while touring.</li>
-                  <li>All flights within Vietnam and Cambodia.</li>
                   <li>Tax & service charge.</li>
                 </ul>
               </div>
@@ -149,7 +220,7 @@ const PackageDetails = ({ isLoggedIn }) => {
 
           <section id="reviews">
             <div className="review-details">
-              <img src="http://localhost:3000/path/to/tripadvisor-logo.png" alt="Tripadvisor" className="tripadvisor-logo" />
+              <img src={tripadvisor} alt="Tripadvisor" className="tripadvisor-logo" />
               <div className="review-rating">
                 <span className="rating-value">4.9</span>
                 <span className="review-count">1498 reviews</span>
@@ -163,21 +234,31 @@ const PackageDetails = ({ isLoggedIn }) => {
                 <a href="#view-all-reviews" className="view-all-reviews">VIEW ALL REVIEWS</a>
               </div>
             </div>
-            {isLoggedIn ? (
+            {userInfo ? (
               <div className="booking-section">
                 <label htmlFor="persons">Select number of persons:</label>
-                <select id="persons" value={persons} onChange={handlePersonsChange}>
-                  {[0, 1, 2, 3, 4, 5].map((num) => (
+                <select id="persons" value={persons} onChange={handlePersonsChange} className="persons-input">
+                  <option value="">Select</option>
+                  {[1, 2, 3, 4, 5].map((num) => (
                     <option key={num} value={num}>{num}</option>
                   ))}
                 </select>
-                <label htmlFor="travel-date">Select date of travel:</label>
-                <input type="date" id="travel-date" value={travelDate} onChange={handleTravelDateChange} />
-                <button className="book-now-btn">Book Now</button>
+                <label htmlFor="dateOfTravel">Select date of travel:</label>
+                <input
+                  type="date"
+                  id="dateOfTravel"
+                  value={dateOfTravel}
+                  onChange={handleDateChange}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="date-input"
+                />
+                <button className="book-now-btn" onClick={handleBookNow}>Book Now</button>
+                {error && <p className="error">{error}</p>}
               </div>
             ) : (
               <div className="login-prompt">
-                <a href="#" onClick={handleLoginRedirect}>Please log in to book the package and for exclusive offers</a>
+                <p>Please login to book the package.</p>
+                <button onClick={() => navigate('/login')} className="login-btn">Login</button>
               </div>
             )}
           </section>

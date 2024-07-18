@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css';
 import logo from '../../assets/images/logo.png';
 import { SessionContext } from '../../context/SessionContext';
@@ -10,6 +10,7 @@ const Header = () => {
     const [destinations, setDestinations] = useState([]);
     const dropdownRef = useRef(null);
     const { userInfo, handleLogout } = useContext(SessionContext);
+    const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
         setDropdownOpen(!dropdownOpen);
@@ -48,16 +49,16 @@ const Header = () => {
     const handleDestinationClick = async (destinationId) => {
         if (userInfo && userInfo.userId) {
             const userId = userInfo.userId;
+            const token = userInfo.token;
             localStorage.setItem('userId', userId);
             localStorage.setItem('destinationId', destinationId);
-            console.log('User ID:', userId);
-            console.log('Destination ID:', destinationId);
 
             try {
                 const response = await fetch('http://localhost:3000/api/userAnalysis', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `${token}`,   
                     },
                     body: JSON.stringify({ userId, destinationId }),
                 });
@@ -113,7 +114,7 @@ const Header = () => {
                                 
                                 <li>
                                     <button
-                                        onClick={handleLogout}
+                                        onClick={() => handleLogout(navigate)}
                                         className="logout-button_loginPageStyle"
                                         style={{ fontSize: '1.18em' }}
                                     >

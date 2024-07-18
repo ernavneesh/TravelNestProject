@@ -12,15 +12,17 @@ export const SessionProvider = ({ children }) => {
         }
     }, []);
 
-    const handleLogin = (firstName, email, userId) => {
-        const userInfo = { firstName, email, userId };
+    const handleLogin = (firstName, email, userId, token) => {
+        const userInfo = { firstName, email, userId, token };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         setUserInfo(userInfo);
     };
 
-    const handleLogout = () => {
+    const handleLogout = (navigate) => {
         localStorage.removeItem('userInfo');
         setUserInfo(null);
+        navigate('/'); // Navigate to Home page
+        window.location.reload(); // Refresh the page
     };
 
     return (

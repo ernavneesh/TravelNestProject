@@ -5,11 +5,14 @@ const destinationRoutes = require('./routes/destination.route');
 const packageRoutes = require('./routes/package.route');
 const userAnalysisRoutes = require('./routes/userAnalysis.route');
 const discountRoutes = require('./routes/discount.route');
+const bookingRoutes = require('./routes/booking.route');
+const reviewRoutes = require('./routes/review.route');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const Booking = require('./models/booking.model');
+const Review = require('./models/review.model')
 require('dotenv').config();
 
 const app = express();
@@ -25,13 +28,12 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello, Express.js Server!</h1>');
 });
 
+
 // Booking route
 app.get('/api/bookPackage/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log("User id :", userId);
     const bookings = await Booking.find({ userId }).populate('packageId').populate('discountId').exec();
-    console.log("Bookings : ", bookings);
     res.json(bookings);
   } catch (err) {
     console.error('Error fetching bookings:', err);
@@ -39,12 +41,16 @@ app.get('/api/bookPackage/:userId', async (req, res) => {
   }
 });
 
+
+
 // Other routes
 app.use('/api/users', userRoutes);
 app.use('/api/destination', destinationRoutes);
 app.use('/api/package', packageRoutes);
 app.use('/api/userAnalysis', userAnalysisRoutes);
 app.use('/api/discount', discountRoutes);
+app.use('/api/bookPackage', bookingRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
