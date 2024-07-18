@@ -27,10 +27,8 @@ function App() {
               <Route path="/packages/:id" element={<PackageDetails />} />
               <Route path="/bookinginfo" element={<BookingDetails />} />
               <Route path="/processing" element={<Processing />} />
-              <Route path="/register" element={<Registration />} /> 
               <Route path="/login" element={<LoginPage />} />
               <Route path="/mybookings" element={<MyBookings />} />
-              <Route path="/packages/:id" element={<PackageDetails />} />
             </Routes>
           </div>
           <Footer />
