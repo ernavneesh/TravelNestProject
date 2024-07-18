@@ -49,16 +49,16 @@ const Header = () => {
     const handleDestinationClick = async (destinationId) => {
         if (userInfo && userInfo.userId) {
             const userId = userInfo.userId;
+            const token = userInfo.token;
             localStorage.setItem('userId', userId);
             localStorage.setItem('destinationId', destinationId);
-            console.log('User ID:', userId);
-            console.log('Destination ID:', destinationId);
 
             try {
                 const response = await fetch('http://localhost:3000/api/userAnalysis', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `${token}`,   
                     },
                     body: JSON.stringify({ userId, destinationId }),
                 });

@@ -8,7 +8,7 @@ function DestinationDetails() {
   const navigate = useNavigate();
   const [destination, setDestination] = useState(null);
   const [packages, setPackages] = useState([]);
-  const [sortCriteria, setSortCriteria] = useState('days'); // Default sort by number of days
+  const [sortCriteria, setSortCriteria] = useState('days'); 
   const { userInfo } = useContext(SessionContext);
 
   useEffect(() => {
@@ -17,7 +17,6 @@ function DestinationDetails() {
         const response = await fetch(`http://localhost:3000/api/destination/${id}`);
         const data = await response.json();
         setDestination(data);
-        console.log("Dest", data);
       } catch (error) {
         console.error('Error fetching destination:', error);
       }
@@ -30,7 +29,6 @@ function DestinationDetails() {
 
         const filteredPackages = data.filter(pkg => pkg.destinationId === id);
         setPackages(filteredPackages);
-        console.log("Packages :", filteredPackages);
       } catch (error) {
         console.error('Error fetching packages:', error);
       }
@@ -59,12 +57,14 @@ function DestinationDetails() {
     if (userInfo && userInfo.userId) {
       const userId = userInfo.userId;
       const destinationId = id;
+      const token =  userInfo.token;
 
       try {
         const response = await fetch('http://localhost:3000/api/userAnalysis', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${token}`,
           },
           body: JSON.stringify({ userId, destinationId }),
         });
@@ -80,7 +80,7 @@ function DestinationDetails() {
       }
     }
 
-    navigate(`/packages/${pkg._id}`); // Navigate to the package details page
+    navigate(`/packages/${pkg._id}`); 
   };
 
   if (!destination) {
@@ -125,7 +125,7 @@ function DestinationDetails() {
           <article
             key={pkg._id}
             className="tour-item col-xs-12 col-sm-6 col-lg-4"
-            onClick={() => handlePackageClick(pkg)} // Add click handler
+            onClick={() => handlePackageClick(pkg)} 
           >
             <div className="tour-item-wrapper">
               <img src={`http://localhost:3000/${pkg.packageImage}`} alt={pkg.packageName} className="destination-image" />

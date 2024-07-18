@@ -9,17 +9,19 @@ function DestinationCard({ destination, discount, onClick, clickCount }) {
   const imageUrl = `http://localhost:3000/${destination.image}`;
 
   const handleCardClick = async () => {
-    onClick();  // Call the passed onClick function to handle click count
+    onClick();  
     const destinationId = destination._id;
 
     if (userInfo && userInfo.userId) {
       const userId = userInfo.userId;
+      const token =  userInfo.token;
 
       try {
         const response = await fetch('http://localhost:3000/api/userAnalysis', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `${token}`,
           },
           body: JSON.stringify({ userId, destinationId }),
         });
@@ -37,7 +39,6 @@ function DestinationCard({ destination, discount, onClick, clickCount }) {
       console.log('User is not logged in.');
     }
 
-    // Navigate to the destination details page regardless of login status
     navigate(`/destinations/${destinationId}`);
   };
  
