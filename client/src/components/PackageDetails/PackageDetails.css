@@ -5,7 +5,8 @@ html {
 .banner-container {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 400px;
+  overflow: hidden;
 }
 
 .destination-image-full {

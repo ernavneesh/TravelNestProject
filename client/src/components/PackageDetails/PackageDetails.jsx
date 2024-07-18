@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './PackageDetails.css';
 
-const PackageDetails = () => {
+const PackageDetails = ({ isLoggedIn }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [packageData, setPackageData] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [persons, setPersons] = useState(1);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [persons, setPersons] = useState(0);
+  const [travelDate, setTravelDate] = useState('');
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -25,21 +25,13 @@ const PackageDetails = () => {
     };
 
     fetchPackageData();
-
-    // Check login status (this is a placeholder; replace with actual login check logic)
-    const loggedIn = checkLoginStatus();
-    setIsLoggedIn(loggedIn);
   }, [id]);
 
-  const checkLoginStatus = () => {
-    // Placeholder for actual login check logic
-    // Replace this with your actual login check logic, e.g., checking a token in local storage
-    return localStorage.getItem('token') ? true : false;
-  };
+  if (!packageData) {
+    return <div>Loading...</div>;
+  }
 
-  const handleLoginRedirect = () => {
-    navigate('/login');
-  };
+  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -49,11 +41,13 @@ const PackageDetails = () => {
     setPersons(event.target.value);
   };
 
-  if (!packageData) {
-    return <div>Loading...</div>;
-  }
+  const handleTravelDateChange = (event) => {
+    setTravelDate(event.target.value);
+  };
 
-  const { packageName, noOfDays, amountPerPerson, overviewDetails, highlights = [], itinerary = [], packageImage, locations } = packageData;
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
 
   return (
     <div>
@@ -122,7 +116,7 @@ const PackageDetails = () => {
 
           <section id="information">
             <h2>Useful Information</h2>
-            <p>This sample itinerary was created by our travel experts as inspiration for your next trip. Ready for your customization. You pick to suit your budget, desires, and cultural experiences. The price of this trip will vary, depending on the number of people in your party, dates of departure, and the availability of ground services. Please click on Inquire Now (above) and give us the necessary information to enable us to send you a FREE personalized quote within 24 hours if not sooner!</p>
+            <p>This sample itinerary was created by our travel experts as inspiration for your next trip. Ready for your customization. You pick to suit your budget, desires, and cultural experiences. The price of this trip will vary, depending on the number of people in your party, dates of departure, and the availability of ground services. Please click on Inquire Now (above) and give us the necessary information to enable us to send you a FREE personalized quote within 48 hours if not sooner!</p>
             <div className="info-section">
               <div className="info-include">
                 <h3>Our Service Include:</h3>
@@ -135,6 +129,7 @@ const PackageDetails = () => {
                   <li>Boat trip as mentioned in the itinerary.</li>
                   <li>All flights within Vietnam and Cambodia.</li>
                   <li>Drinking water while touring.</li>
+                  <li>All flights within Vietnam and Cambodia.</li>
                   <li>Tax & service charge.</li>
                 </ul>
               </div>
@@ -177,12 +172,12 @@ const PackageDetails = () => {
                   ))}
                 </select>
                 <label htmlFor="travel-date">Select date of travel:</label>
-                <input type="date" id="travel-date" />
+                <input type="date" id="travel-date" value={travelDate} onChange={handleTravelDateChange} />
                 <button className="book-now-btn">Book Now</button>
               </div>
             ) : (
               <div className="login-prompt">
-                <a href="/login" onClick={handleLoginRedirect}>Please log in to book the package and for exclusive offers</a>
+                <a href="#" onClick={handleLoginRedirect}>Please log in to book the package and for exclusive offers</a>
               </div>
             )}
           </section>

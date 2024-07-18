@@ -156,32 +156,101 @@ function BookingDetails() {
             body: JSON.stringify({
               to: passenger.email,
               subject: 'Booking Confirmation',
-              text: `
-                Your booking is confirmed!
-                Hi ${passenger.firstName} ${passenger.lastName},
-                Thank you for booking with Travel Nest!
-                Please find your receipt, including any extras purchased for your booking, attached to this email.
-                Below is everything related to your upcoming trip, including:
-
-                E-ticket info, check-in details, full trip details.
-                Download your receipt/s and create a business receipt
-                Make sure to stay updated - your trip details may change at any time.
-                Have a great trip!
-
-                Booking Status  Confirmed
-                
-
-                Your Trip Summary
-                ${location}
-                ${travelDate.toDateString()} - ${endDate.toDateString()}
-                ${passengers.length} passenger(s):
-                ${passengers.map(p => `${p.firstName} ${p.lastName}`).join('\n')}
-
-                Total 
-                CAD : ${subTotal.toFixed(2)}
-
-                Things to keep in mind:
-                • Check "Above Booking Information" for details of your trip. If listed among the available services there, contact our support to confirm availability and cost for your trip, or find more information here.
+              html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                      background-color: #f4f4f4;
+                      color: #333;
+                      margin: 0;
+                      padding: 0;
+                    }
+                    .container {
+                      width: 100%;
+                      max-width: 600px;
+                      margin: 0 auto;
+                      background-color: #ffffff;
+                      padding: 20px;
+                      border-radius: 8px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    .header {
+                      text-align: center;
+                      padding: 10px 0;
+                      border-bottom: 1px solid #eeeeee;
+                    }
+                    .header h1 {
+                      margin: 0;
+                      font-size: 24px;
+                      color: #333;
+                    }
+                    .content {
+                      padding: 20px;
+                    }
+                    .content h2 {
+                      font-size: 20px;
+                      color: #333;
+                    }
+                    .content p {
+                      font-size: 16px;
+                      line-height: 1.5;
+                      color: #666;
+                    }
+                    .trip-summary {
+                      margin-top: 20px;
+                      padding: 10px;
+                      border: 1px solid #eeeeee;
+                      border-radius: 8px;
+                      background-color: #f9f9f9;
+                    }
+                    .trip-summary h3 {
+                      margin: 0 0 10px;
+                      font-size: 18px;
+                      color: #333;
+                    }
+                    .trip-summary p {
+                      margin: 5px 0;
+                      font-size: 16px;
+                      color: #666;
+                    }
+                    .footer {
+                      margin-top: 20px;
+                      padding: 10px 0;
+                      border-top: 1px solid #eeeeee;
+                      text-align: center;
+                      color: #999;
+                      font-size: 14px;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="header">
+                      <h1>Booking Confirmation</h1>
+                    </div>
+                    <div class="content">
+                      <h2>Hi ${passenger.firstName} ${passenger.lastName},</h2>
+                      <p>Thank you for booking with Travel Nest! Please find your receipt, including any extras purchased for your booking, attached to this email.</p>
+                      <p>Below is everything related to your upcoming trip:</p>
+                      <div class="trip-summary">
+                        <h3>Trip Summary</h3>
+                        <p><strong>Location:</strong> ${location}</p>
+                        <p><strong>Travel Dates:</strong> ${travelDate.toDateString()} - ${endDate.toDateString()}</p>
+                        <p><strong>Passengers:</strong></p>
+                        ${passengers.map(p => `<p>${p.firstName} ${p.lastName}</p>`).join('')}
+                        <p><strong>Total Amount:</strong> CAD ${subTotal.toFixed(2)}</p>
+                      </div>
+                      <p>Make sure to stay updated - your trip details may change at any time. Have a great trip!</p>
+                    </div>
+                    <div class="footer">
+                      <p>For any inquiries, contact us at support@travelnest.com</p>
+                    </div>
+                  </div>
+                </body>
+                </html>
               `
             })
           });
