@@ -234,6 +234,8 @@ const PackageDetails = () => {
                 <a href="#view-all-reviews" className="view-all-reviews">VIEW ALL REVIEWS</a>
               </div>
             </div>
+            </section>
+            <section id="book-package">
             {userInfo ? (
               <div className="booking-section">
                 <label htmlFor="persons">Select number of persons:</label>
@@ -255,6 +257,7 @@ const PackageDetails = () => {
                 <button className="book-now-btn" onClick={handleBookNow}>Book Now</button>
                 {error && <p className="error">{error}</p>}
               </div>
+              
             ) : (
               <div className="login-prompt">
                 <p>Please login to book the package.</p>
