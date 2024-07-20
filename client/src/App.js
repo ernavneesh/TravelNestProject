@@ -11,6 +11,7 @@ import Processing from './components/BookingDetails/Processing';
 import { SessionProvider } from './context/SessionContext';
 import MyBookings from './components/MyBookings/MyBookings';
 import PackageDetails from './components/PackageDetails/PackageDetails';
+import Registration from './components/Registration/Registration/.';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/processing" element={<Processing />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/mybookings" element={<MyBookings />} />
+              <Route path="/register" element={<Registration />} />
             </Routes>
           </div>
           <Footer />

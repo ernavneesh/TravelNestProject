@@ -238,6 +238,7 @@ const PackageDetails = () => {
             <section id="book-package">
             {userInfo ? (
               <div className="booking-section">
+                 <h3>Book your dream vacation with us!</h3>
                 <label htmlFor="persons">Select number of persons:</label>
                 <select id="persons" value={persons} onChange={handlePersonsChange} className="persons-input">
                   <option value="">Select</option>
@@ -258,10 +259,10 @@ const PackageDetails = () => {
                 {error && <p className="error">{error}</p>}
               </div>
               
-            ) : (
+            ) :(
               <div className="login-prompt">
-                <p>Please login to book the package.</p>
-                <button onClick={() => navigate('/login')} className="login-btn">Login</button>
+                
+                <a href="/login" className="login-link">Please login to book the package.</a>
               </div>
             )}
           </section>
