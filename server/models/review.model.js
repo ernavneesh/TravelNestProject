@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const ReviewSchema = mongoose.Schema({
     packageId: {
         type: mongoose.Types.ObjectId,
-        ref: 'booking',
+        ref: 'package',
         required: true
     },
     bookingId: {
         type: mongoose.Types.ObjectId,
-        ref: 'package',
+        ref: 'booking',
         required: true
     },
     userId: {
