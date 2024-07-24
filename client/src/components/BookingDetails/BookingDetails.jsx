@@ -141,11 +141,7 @@ function BookingDetails() {
       };
 
       try {
-<<<<<<< Updated upstream
-        const response = await fetch('http://localhost:3001/api/createPaymentIntent', {
-=======
         const response = await fetch('http://localhost:3000/api/createPaymentIntent', {
->>>>>>> Stashed changes
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
