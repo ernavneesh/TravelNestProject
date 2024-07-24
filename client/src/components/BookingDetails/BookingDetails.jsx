@@ -153,10 +153,55 @@ function BookingDetails() {
           throw new Error('Network response was not ok');
         }
 
-        const { clientSecret } = await response.json();
-        console.log('Payment Intent created:', clientSecret);
+        const responseData = await response.json();
+        console.log('Booking successful:', responseData); 
 
-        navigate('/payment', { state: { clientSecret, bookingData } });
+        // Send email to all passengers
+        const emailPromises = passengers.map((passenger) => {
+          const endDate = new Date(dateOfTravel);
+          endDate.setDate(endDate.getDate() + noOfDays);
+          return fetch('http://localhost:3000/api/sendEmail', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              to: passenger.email,
+              subject: 'Booking Confirmation',
+              text: `
+                Your booking is confirmed!
+                Hi ${passenger.firstName} ${passenger.lastName},
+                Thank you for booking with Travel Nest!
+                Please find your receipt, including any extras purchased for your booking, attached to this email.
+                Below is everything related to your upcoming trip, including:
+
+                E-ticket info, check-in details, full trip details.
+                Download your receipt/s and create a business receipt
+                Make sure to stay updated - your trip details may change at any time.
+                Have a great trip!
+
+                Booking Status  Confirmed
+
+                Your Trip Summary
+                ${tripLocation}
+                ${new Date(dateOfTravel).toDateString()} - ${endDate.toDateString()}
+                ${passengers.length} passenger(s):
+                ${passengers.map(p => `${p.firstName} ${p.lastName}`).join('\n')}
+
+                Total 
+                CAD : ${subTotal.toFixed(2)}
+
+                Things to keep in mind:
+                • Check "Above Booking Information" for details of your trip. If listed among the available services there, contact our support to confirm availability and cost for your trip, or find more information here.
+              `
+            })
+          });
+        });
+
+        await Promise.all(emailPromises);
+        console.log('Emails sent successfully');
+
+        navigate('/processing');
       } catch (error) {
         console.error('Booking failed:', error);
       } finally {

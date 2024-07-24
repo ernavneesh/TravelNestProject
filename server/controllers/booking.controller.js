@@ -1,6 +1,5 @@
 const Booking = require('../models/booking.model');
 const Discount = require('../models/discount.model');
-const mongoose = require('mongoose');
 
 exports.bookPackage = async (req, res) => {
     const {
