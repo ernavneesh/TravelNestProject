@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { SessionContext } from '../../context/SessionContext'; 
 import './BookingDetails.css';
 
+//const stripePromise = loadStripe('pk_test_51PcxHYHdWUZnn01otPVySYcfLnYPt92VUNiVieydSW4buIZgvuA6cICM62wXgYHNqZ8veYcTUq2Rqi9A7maxL7So00sG2rnyd9');
+
+
 function BookingDetails() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -138,7 +141,11 @@ function BookingDetails() {
       };
 
       try {
+<<<<<<< Updated upstream
         const response = await fetch('http://localhost:3001/api/createPaymentIntent', {
+=======
+        const response = await fetch('http://localhost:3000/api/createPaymentIntent', {
+>>>>>>> Stashed changes
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
