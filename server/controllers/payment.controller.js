@@ -1,7 +1,8 @@
 const Stripe = require('stripe');
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe('sk_test_51PcxHYHdWUZnn01olhmEGfAd5DmgKau1CYMfL11prvSzeSeGjI9nHGVt0ecn7926XqR60x8oKKfKaeJDNnYgSolV00xkds5916');
 
 exports.makePayment = async (req, res) => {
+  console.log(stripe);
     const { amount } = req.body;
   
     try {
