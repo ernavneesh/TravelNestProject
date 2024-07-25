@@ -17,8 +17,7 @@ body, html {
 
 .login-page_loginPageStyle {
     display: flex;
-    height: calc(100vh - 80px); /* Adjust based on the header height */
-    margin-top: 80px; /* Adjust based on the header height */
+    
     font-family: 'Arial', sans-serif;
 }
 

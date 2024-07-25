@@ -7,6 +7,7 @@ import { SessionContext } from '../../context/SessionContext';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const { handleLogin } = useContext(SessionContext);
 
@@ -29,6 +30,11 @@ const LoginPage = () => {
             });
 
             if (!response.ok) {
+                if (response.status === 400) {
+                    setErrorMessage('Invalid Credentials');
+                } else {
+                    setErrorMessage('An error occurred. Please try again.');
+                }
                 throw new Error('Network response was not ok');
             }
 
@@ -77,6 +83,9 @@ const LoginPage = () => {
                                 required
                             />
                         </div>
+                        {errorMessage && (
+                            <div className="error-message_loginPageStyle">{errorMessage}</div>
+                        )}
                         <button type="submit" className="login-button_loginPageStyle">
                             Login
                         </button>

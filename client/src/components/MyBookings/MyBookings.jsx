@@ -23,12 +23,13 @@ const MyBookings = () => {
               'Authorization': `Bearer ${token}`,
             }
           });
-
+          
           if (!bookingResponse.ok) {
             throw new Error(`HTTP error! Status: ${bookingResponse.status}`);
           }
 
           const bookingData = await bookingResponse.json();
+          
 
           const bookingsWithDetails = await Promise.all(
             bookingData.map(async booking => {

@@ -13,7 +13,11 @@ const PackageDetails = () => {
   const [dateOfTravel, setDateOfTravel] = useState('');
   const [error, setError] = useState('');
   const [discountDetails, setDiscountDetails] = useState(null);
-  const { userInfo } = useContext(SessionContext); 
+  const { userInfo } = useContext(SessionContext);
+  const [reviews, setReviews] = useState([]);
+  const [fullStars, setFullStars] = useState(0);
+  const [halfStar, setHalfStars] = useState(false);
+  
 
   useEffect(() => {
     const fetchPackageData = async () => {
@@ -61,6 +65,39 @@ const PackageDetails = () => {
       fetchDiscountDetails();
     }
   }, [userInfo, packageData]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const token = userInfo.token;
+        console.log("ID :",id);
+        const response = await fetch(`http://localhost:3000/api/reviews/packageid/${id}`,{
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': `${token}`,
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Review" , data);
+        console.log("Average :", data.averageRating);
+
+        const fullStars = Math.floor(data.averageRating);
+        const halfStar = data.averageRating % 1 !== 0;
+        setFullStars(fullStars);
+        setHalfStars(halfStar);
+        console.log("Full and half :",fullStars,halfStar);
+        setReviews(data.reviews);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
+    };
+
+    fetchReviews();
+  }, [userInfo,id]);
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -219,23 +256,30 @@ const PackageDetails = () => {
           </section>
 
           <section id="reviews">
-            <div className="review-details">
-              <img src={tripadvisor} alt="Tripadvisor" className="tripadvisor-logo" />
-              <div className="review-rating">
-                <span className="rating-value">4.9</span>
-                <span className="review-count">1498 reviews</span>
-                <div className="stars">
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star"></i>
-                  <i className="fas fa-star-half-alt"></i>
-                </div>
-                <a href="#view-all-reviews" className="view-all-reviews">VIEW ALL REVIEWS</a>
+          <div className="review-details">
+            <img src={tripadvisor} alt="Tripadvisor" className="tripadvisor-logo" />
+            <div className="review-rating">
+              <span className="review-count">{reviews && reviews.length > 0 ? `${reviews.length} reviews` : ' 0 reviews' }</span>
+              
+              <div className="stars">
+                {[...Array(fullStars)].map((_, index) => (
+                  <i key={index} className="fas fa-star filled-star"></i>
+                ))}
+                {halfStar && <i className="fas fa-star-half-alt half-star"></i>}                
+                {[...Array(5 - fullStars - (halfStar ? 1 : 0))].map((_, index) => (
+                  <i key={index} className="fas fa-star" style={{ color: '#d3d3d3' }}></i>
+                ))}
               </div>
+
             </div>
+          </div>
+        </section>
+
+
+          <section id="book-package">
             {userInfo ? (
               <div className="booking-section">
+                <h3>Book your dream vacation with us!</h3>
                 <label htmlFor="persons">Select number of persons:</label>
                 <select id="persons" value={persons} onChange={handlePersonsChange} className="persons-input">
                   <option value="">Select</option>
@@ -257,8 +301,7 @@ const PackageDetails = () => {
               </div>
             ) : (
               <div className="login-prompt">
-                <p>Please login to book the package.</p>
-                <button onClick={() => navigate('/login')} className="login-btn">Login</button>
+                <a href="/login" className="login-link">Please login to book the package.</a>
               </div>
             )}
           </section>
