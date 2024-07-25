@@ -18,10 +18,7 @@ function Payment() {
     const emailPromises = bookingData.personDetails.map((passenger) => {
       const endDate = new Date(bookingData.dateOfTravel);
       endDate.setDate(endDate.getDate() + bookingData.noOfDays);
-      
-      console.log("Email :",passenger);
-      
-      console.log("Email :",passenger.email);
+
       return fetch('http://localhost:3000/api/sendEmail', {
         method: 'POST',
         headers: {
@@ -31,30 +28,46 @@ function Payment() {
           to: passenger.email,
           subject: 'Booking Confirmation',
           text: `
-            Your booking is confirmed!
-            Hi ${passenger.firstname} ${passenger.lastname},
-            Thank you for booking with Travel Nest!
-            Please find your receipt, including any extras purchased for your booking, attached to this email.
-            Below is everything related to your upcoming trip, including:
+          🚀 Your Adventure Awaits! 🚀
 
-            E-ticket info, check-in details, full trip details.
-            Download your receipt/s and create a business receipt
-            Make sure to stay updated - your trip details may change at any time.
-            Have a great trip!
+          Hi ${passenger.firstname} ${passenger.lastname},
 
-            Booking Status  Confirmed
+          Thank you for choosing **Travel Nest** for your upcoming adventure! 🌍✨
 
-            Your Trip Summary
-            ${bookingData.location}
-            ${new Date(bookingData.dateOfTravel).toDateString()} - ${endDate.toDateString()}
-            ${bookingData.personDetails.length} passenger(s):
-            ${bookingData.personDetails.map(p => `${p.firstname} ${p.lastname}`).join('\n')}
+          We've attached your receipt, including any extras purchased for your booking. Below is everything you need to know about your trip:
 
-            Total 
-            CAD : ${bookingData.totalAmount.toFixed(2)}
+          ========================================
+          🎟️ **E-ticket Info**
+          🗓️ **Check-in Details**
+          📋 **Full Trip Details**
+          ========================================
 
-            Things to keep in mind:
-            • Check "Above Booking Information" for details of your trip. If listed among the available services there, contact our support to confirm availability and cost for your trip, or find more information here.
+          Enjoy your journey! 🌟✈️
+
+          ----------------------------------------
+          **Booking Status: CONFIRMED**
+          ----------------------------------------
+
+          **Trip Summary** 📍
+          Destination: ${bookingData.tripLocation}
+          Dates: ${new Date(bookingData.dateOfTravel).toDateString()} - ${endDate.toDateString()}
+
+          **Passenger(s):**
+          1. ${passenger.firstname} ${passenger.lastname}
+
+          **Total Amount** 💰
+          CAD: ${bookingData.totalAmount.toFixed(2)}
+
+          ----------------------------------------
+          **Important Notes:**
+          - Check the "Above Booking Information" for details of your trip.
+          - For available services, contact our support to confirm availability and cost.
+          - Find more information via travelnestbyechologic@gmail.com.
+
+          ----------------------------------------
+
+          Best regards,
+          **The Travel Nest Team** ✨
           `
         })
       });
@@ -130,7 +143,7 @@ function Payment() {
 
         setTimeout(() => {
           navigate('/');
-        }, 20000);
+        }, 4000);
       } catch (error) {
         console.error('Booking failed:', error);
         setPaymentStatus('error');
