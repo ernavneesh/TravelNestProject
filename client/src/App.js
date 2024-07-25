@@ -11,7 +11,12 @@ import Processing from './components/BookingDetails/Processing';
 import { SessionProvider } from './context/SessionContext';
 import MyBookings from './components/MyBookings/MyBookings';
 import PackageDetails from './components/PackageDetails/PackageDetails';
-import Registration from './components/Registration/Registration/.';
+import Registration from './components/Registration/Registration';
+import Payment from './components/Payment/Payment';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe('pk_test_51PcxHYHdWUZnn01otPVySYcfLnYPt92VUNiVieydSW4buIZgvuA6cICM62wXgYHNqZ8veYcTUq2Rqi9A7maxL7So00sG2rnyd9');
 
 function App() {
   return (
@@ -31,6 +36,14 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/mybookings" element={<MyBookings />} />
               <Route path="/register" element={<Registration />} />
+              <Route 
+                path="/payment" 
+                element={
+                  <Elements stripe={stripePromise}>
+                    <Payment />
+                  </Elements>
+                } 
+              />
             </Routes>
           </div>
           <Footer />
@@ -39,6 +52,5 @@ function App() {
     </SessionProvider>
   );
 }
-
 
 export default App;

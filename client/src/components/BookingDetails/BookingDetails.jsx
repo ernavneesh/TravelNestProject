@@ -3,6 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { SessionContext } from '../../context/SessionContext'; 
 import './BookingDetails.css';
 
+//const stripePromise = loadStripe('pk_test_51PcxHYHdWUZnn01otPVySYcfLnYPt92VUNiVieydSW4buIZgvuA6cICM62wXgYHNqZ8veYcTUq2Rqi9A7maxL7So00sG2rnyd9');
+
+
 function BookingDetails() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -119,8 +122,8 @@ function BookingDetails() {
     if (passengers.length === parseInt(persons)) {
       const bookingData = {
         packageId: packageId,
-        userId: userInfo.userId, 
-        discountId: discountId || null, 
+        userId: userInfo.userId,
+        discountId: discountId || null,
         noOfPerson: persons,
         personDetails: passengers.map((data) => ({
           firstname: data.firstName,
@@ -134,90 +137,28 @@ function BookingDetails() {
         amountPerPerson: amountPerPerson,
         dateOfTravel: new Date(dateOfTravel),
         bookingDate: new Date(),
-        totalAmount: subTotal
+        totalAmount: subTotal,
+        tripLocation: tripLocation,
+        noOfDays: noOfDays
       };
-
+  
       try {
-        setProcessing(true); 
-        const token = userInfo.token;
-        const response = await fetch('http://localhost:3000/api/bookPackage', {
+        const response = await fetch('http://localhost:3000/api/createPaymentIntent', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${token}`,
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify(bookingData)
+          body: JSON.stringify({ amount: subTotal })
         });
-
+  
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
-        const responseData = await response.json();
-        console.log('Booking successful:', responseData); 
-
-        // Send email to all passengers
-        const emailPromises = passengers.map((passenger) => {
-          const endDate = new Date(dateOfTravel);
-          endDate.setDate(endDate.getDate() + noOfDays);
-          return fetch('http://localhost:3000/api/sendEmail', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              to: passenger.email,
-              subject: 'Booking Confirmation',
-              text: `
-                           
-🚀 Your Adventure Awaits! 🚀
-
-Hi ${passenger.firstName} ${passenger.lastName},
-
-Thank you for choosing **Travel Nest** for your upcoming adventure! 🌍✨
-
-We've attached your receipt, including any extras purchased for your booking. Below is everything you need to know about your trip:
-
-========================================
-🎟️ **E-ticket Info**
-🗓️ **Check-in Details**
-📋 **Full Trip Details**
-========================================
-
-Enjoy your journey! 🌟✈️
-
-----------------------------------------
-**Booking Status: CONFIRMED**
-----------------------------------------
-
-**Trip Summary** 📍
-Destination: ${tripLocation}
-Dates: ${new Date(dateOfTravel).toDateString()} - ${endDate.toDateString()}
-
-**Passenger(s):**
-1. ${passenger.firstName} ${passenger.lastName}
-
-**Total Amount** 💰
-CAD: ${subTotal.toFixed(2)}
-
-----------------------------------------
-**Important Notes:**
-- Check the "Above Booking Information" for details of your trip.
-- For available services, contact our support to confirm availability and cost.
-- Find more information via travelnestbyechologic@gmail.com.
-
-----------------------------------------
-
-Best regards,
-**The Travel Nest Team** ✨   `
-            })
-          });
-        });
-
-        await Promise.all(emailPromises);
-        console.log('Emails sent successfully');
-
-        navigate('/processing');
+  
+        const { clientSecret } = await response.json();
+        console.log('Payment Intent created:', clientSecret);
+  
+        navigate('/payment', { state: { clientSecret, bookingData } });
       } catch (error) {
         console.error('Booking failed:', error);
       } finally {
