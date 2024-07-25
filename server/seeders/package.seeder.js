@@ -29,7 +29,8 @@ const packages = [
           {
             shortDescription: "Day 3: Journey to Halong: enjoy the spectacular scenery of the bay.",
             longDescription: "The scenery of Halong Bay, where thousands of limestone islands jut out of the emerald sea, sculpted into bizarre shapes, is truly an iconic image of Vietnam. An overnight boat trip is the best way to enjoy this Vietnamese must-see. Saying goodbye to Hanoi, you drive through the rich farmlands of the Red River Delta to the legendary Halong Bay. It takes you 3 hours, including a 20-minute stop. Arrive at the jetty in Halong City towards noon and proceed with check-in formalities. After a welcome onboard, enjoy a tasty lunch while cruising to the mythical bay. Around mid-afternoon, you participate in some activities to discover every corner of the bay. Each cruise operates a different itinerary, and caving, kayaking, rowing boat, and swimming are the most popular ones. Towards the end of the day, the cruise sets anchor for the night among the karst formations. Dinner is on board.",
-            meal: "Breakfast, Lunch, Dinner."
+            meal: "Breakfast, Lunch, Dinner.",
+            image: "uploads/packages/vietnam/day3.png"
           },
           {
             shortDescription: "Day 4:Hanoi – depart for home.",
