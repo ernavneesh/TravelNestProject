@@ -12,7 +12,8 @@ const Header = () => {
     const { userInfo, handleLogout } = useContext(SessionContext);
     const navigate = useNavigate();
 
-    const handleDropdownToggle = () => {
+    const handleDropdownToggle = (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
         setDropdownOpen(!dropdownOpen);
     };
 
@@ -47,6 +48,7 @@ const Header = () => {
     }, []);
 
     const handleDestinationClick = async (destinationId) => {
+        setDropdownOpen(false); 
         if (userInfo && userInfo.userId) {
             const userId = userInfo.userId;
             const token = userInfo.token;
@@ -86,11 +88,11 @@ const Header = () => {
                 </button>
                 <nav className={menuOpen ? 'open' : ''}>
                     <ul>
-                        <li><a href="/">Home</a></li>
-                        <li className="dropdown" ref={dropdownRef}>
-                            <a href="#destination" onClick={handleDropdownToggle}>
-                                Destinations
-                            </a>
+                    <li><Link to="/">Home</Link></li>
+                    <li className="dropdown" ref={dropdownRef}>
+                        <Link to="#" onClick={handleDropdownToggle}>
+                            Destinations
+                        </Link>
                             {dropdownOpen && (
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
@@ -106,11 +108,11 @@ const Header = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><a href="/about-us">About Us</a></li>
+                        <li><Link to="/about-us">About Us</Link></li>
                         {userInfo && userInfo.firstName ? (
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
-                                <li><a href="/mybookings">My Bookings</a></li>
+                                <li><Link to="/mybookings">My Bookings</Link></li>
                                 
                                 <li>
                                     <button
