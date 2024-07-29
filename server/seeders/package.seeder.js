@@ -67,7 +67,8 @@ const packages = [
           {
             shortDescription: "Day 3: Fly to Luang Prabang, the ancient town by the Mekong River.",
             longDescription: "After lunch, you are transferred to Siem Reap International Airport. Today, you fly to Luang Prabang. Hello Laos! Upon arrival, be greeted by the guide and transferred to the hotel. Please look for the Asia Pathfinders welcome sign in the arrival’s hall.",
-            meal: "Breakfast"
+            meal: "Breakfast",
+            image: "uploads/packages/vietnam/day3.png"
           },
           {
             shortDescription: "Day 4:Spend a leisure morning in the bay- back to Hanoi & fly to Da Nang.",
@@ -109,7 +110,8 @@ const packages = [
           {
             shortDescription: "Day 3:Hanoi: food & culture on the antique Minsk.",
             longDescription: "In the first part of our Hanoi motorcycle tour, we expose you to the REAL HANOI with a day in the life experience, featuring the parts-unknown of the city with slices of life in the maze of backstreets, tiny alleyways, local homes, schools, random markets, and the black market, experiencing where and how locals live, work, and play. On Hanoi Backstreet Tours’ journeys, we not only show you the good, but we also expose the bad and the weird of your destinations as it is. For us, the run-of-the-mill tourist sites are only the tip of the iceberg, the majority of your destinations remain hidden in parts unknown.",
-            meal: "Breakfast, Lunch"
+            meal: "Breakfast, Lunch",
+            image: "uploads/packages/vietnam/day3.png"
           },
           {
             shortDescription: "Day 4:Hanoi – Halong bay: relax in the garden of karst.",
@@ -440,6 +442,7 @@ const packages = [
             shortDescription: "Day 3: Visit a floating market & street food tour in China Town.",
             longDescription: "For food lovers, visiting Bangkok’s Chinatown at night is a memorable food tour. From 7 pm, Chinatown was bustling with colorful lights; food stalls with delicious Chinese dishes such as wonton noodles, dumplings, fried shrimp with cashew nuts, and candied gourds.",
             meal: "Breakfast, Lunch, Dinner",
+            image: "uploads/packages/Thailand/day3.png"
           },
           {
             shortDescription: "Day 4: A full-day tour of Chiang Mai city & Thai cooking class.",
@@ -537,7 +540,8 @@ const packages = [
           {
             shortDescription: "Day 3: Bangkok – fly to Chiang Mai, UNESCO World Heritage Site",
             longDescription: " Depending on your departure time, a private driver will pick you up from the hotel (2 hours before your flight departure time) and transfer you to the airport for your flight to Chiang Mai. Upon arrival at Chiang Mai Airport, your private tour guide and driver will meet and transfer you to your hotel in the Old Town area to check-in. The rest of the day will be yours to explore at your leisure.",
-            meal: "Breakfast, Lunch, Dinner"
+            meal: "Breakfast, Lunch, Dinner",
+            image: "uploads/packages/Thailand/day3.png"
           },
           {
             shortDescription: "Day 7: Departure for home.",
