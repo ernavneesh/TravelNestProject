@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Registration.css';
 import registrationImage from '../../assets/images/Registration.png'; // Adjust the path to your image
+import '@fortawesome/fontawesome-free/css/all.min.css'; // Import FontAwesome
 
 const Registration = () => {
     const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const Registration = () => {
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
     const [showPopup, setShowPopup] = useState(false); // State for pop-up visibility
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
     const navigate = useNavigate();
 
@@ -23,6 +25,7 @@ const Registration = () => {
         let tempErrors = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const contactRegex = /^\d{10}$/; // Regular expression for 10-digit contact number
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // Password regex
 
         if (!formData.firstName) {
             tempErrors.firstName = "First Name is required.";
@@ -40,6 +43,8 @@ const Registration = () => {
 
         if (!formData.password) {
             tempErrors.password = "Password is required.";
+        } else if (!passwordRegex.test(formData.password)) {
+            tempErrors.password = "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character.";
         }
 
         if (formData.password !== formData.confirmPassword) {
@@ -151,24 +156,36 @@ const Registration = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
+                        <div className="password-container">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                            />
+                            <i 
+                                className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"} toggle-password`} 
+                                onClick={() => setShowPassword(!showPassword)}
+                            ></i>
+                        </div>
                         {errors.password && <span className="error">{errors.password}</span>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="confirmPassword">Confirm Password:</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                        />
+                        <div className="password-container">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
+                            <i 
+                                className={`fa ${showPassword ? "fa-eye" : "fa-eye-slash"} toggle-password`} 
+                                onClick={() => setShowPassword(!showPassword)}
+                            ></i>
+                        </div>
                         {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
                     </div>
                     <div className="form-group">
@@ -184,12 +201,7 @@ const Registration = () => {
                     </div>
                     <button type="submit" className="register-button">Register</button>
                 </form>
-                <a
-                    className="login-link"
-                    onClick={() => navigate('/login')}
-                >
-                    Go Back to Login
-                </a>
+                <a className="login-link" onClick={() => navigate('/login')} > Go Back to Login</a>
             </div>
         </div>
     );

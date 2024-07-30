@@ -70,6 +70,24 @@ h2 {
     box-sizing: border-box; /* Ensures padding is included in width */
 }
 
+.password-container {
+    position: relative;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Adjust padding to make room for the icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+}
+
 .error {
     color: red;
     font-size: 12px;
