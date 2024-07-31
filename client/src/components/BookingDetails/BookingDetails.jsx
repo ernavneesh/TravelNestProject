@@ -3,9 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { SessionContext } from '../../context/SessionContext'; 
 import './BookingDetails.css';
 
-//const stripePromise = loadStripe('pk_test_51PcxHYHdWUZnn01otPVySYcfLnYPt92VUNiVieydSW4buIZgvuA6cICM62wXgYHNqZ8veYcTUq2Rqi9A7maxL7So00sG2rnyd9');
-
-
 function BookingDetails() {
   const location = useLocation();
   const navigate = useNavigate();

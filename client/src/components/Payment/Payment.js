@@ -105,6 +105,7 @@ function Payment() {
       const bookingPayload = {
         packageId: bookingData.packageId,
         userId: userInfo.userId,
+        discountId: bookingData.discountId || null, // Include discountId here
         noOfPerson: bookingData.personDetails.length,
         personDetails: bookingData.personDetails.map((data) => ({
           firstname: data.firstname,

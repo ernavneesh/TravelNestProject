@@ -13,11 +13,11 @@ const Header = () => {
     const navigate = useNavigate();
 
     const handleDropdownToggle = () => {
-        setDropdownOpen(!dropdownOpen);
+        setDropdownOpen(prevState => !prevState);
     };
 
     const handleMenuToggle = () => {
-        setMenuOpen(!menuOpen);
+        setMenuOpen(prevState => !prevState);
     };
 
     const handleClickOutside = (event) => {
@@ -58,7 +58,7 @@ const Header = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `${token}`,   
+                        'Authorization': `Bearer ${token}`,   
                     },
                     body: JSON.stringify({ userId, destinationId }),
                 });
@@ -86,9 +86,12 @@ const Header = () => {
                 </button>
                 <nav className={menuOpen ? 'open' : ''}>
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><Link to="/">Home</Link></li>
                         <li className="dropdown" ref={dropdownRef}>
-                            <a href="#destination" onClick={handleDropdownToggle}>
+                            <a href="#destination" onClick={(e) => {
+                                e.preventDefault(); // Prevent default anchor behavior
+                                handleDropdownToggle();
+                            }}>
                                 Destinations
                             </a>
                             {dropdownOpen && (
@@ -106,12 +109,11 @@ const Header = () => {
                                 </ul>
                             )}
                         </li>
-                        <li><a href="/about-us">About Us</a></li>
+                        <li><Link to="/about-us">About Us</Link></li>
                         {userInfo && userInfo.firstName ? (
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
-                                <li><a href="/mybookings">My Bookings</a></li>
-                                
+                                <li><Link to="/mybookings">My Bookings</Link></li>
                                 <li>
                                     <button
                                         onClick={() => handleLogout(navigate)}
