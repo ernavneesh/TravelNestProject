@@ -12,8 +12,9 @@ const Header = () => {
     const { userInfo, handleLogout } = useContext(SessionContext);
     const navigate = useNavigate();
 
-    const handleDropdownToggle = () => {
-        setDropdownOpen(prevState => !prevState);
+    const handleDropdownToggle = (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
+        setDropdownOpen(!dropdownOpen);
     };
 
     const handleMenuToggle = () => {
@@ -47,6 +48,7 @@ const Header = () => {
     }, []);
 
     const handleDestinationClick = async (destinationId) => {
+        setDropdownOpen(false); 
         if (userInfo && userInfo.userId) {
             const userId = userInfo.userId;
             const token = userInfo.token;
@@ -86,14 +88,11 @@ const Header = () => {
                 </button>
                 <nav className={menuOpen ? 'open' : ''}>
                     <ul>
-                        <li><Link to="/">Home</Link></li>
-                        <li className="dropdown" ref={dropdownRef}>
-                            <a href="#destination" onClick={(e) => {
-                                e.preventDefault(); // Prevent default anchor behavior
-                                handleDropdownToggle();
-                            }}>
-                                Destinations
-                            </a>
+                    <li><Link to="/">Home</Link></li>
+                    <li className="dropdown" ref={dropdownRef}>
+                        <Link to="#" onClick={handleDropdownToggle}>
+                            Destinations
+                        </Link>
                             {dropdownOpen && (
                                 <ul className="dropdown-menu">
                                     {destinations.map(destination => (
@@ -114,6 +113,7 @@ const Header = () => {
                             <>
                                 <li style={{ fontSize: '1.18em' }}>Welcome, {userInfo.firstName}</li>
                                 <li><Link to="/mybookings">My Bookings</Link></li>
+                                
                                 <li>
                                     <button
                                         onClick={() => handleLogout(navigate)}

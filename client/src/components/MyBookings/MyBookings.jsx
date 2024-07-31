@@ -175,7 +175,7 @@ const MyBookings = () => {
             <div className="booking-summary" onClick={() => toggleBookingDetails(booking._id)}>
               <div className="booking-row">
                 <p><strong>Booking ID:</strong> {booking._id}</p>
-                <p><strong>Date of Travel:</strong> {new Date(booking.dateOfTravel).toLocaleDateString()}</p>
+                <p><strong>Date of Travel:</strong>{new Date(booking.dateOfTravel).toLocaleDateString('en-US', { timeZone: 'UTC'})}</p>
                 <p><strong>Promo Code:</strong> {booking.discountDetails ? booking.discountDetails.promoCode : 'Not Available'}</p>
                 <p><strong>Total Amount:</strong> ${booking.totalAmount}</p>
               </div>
