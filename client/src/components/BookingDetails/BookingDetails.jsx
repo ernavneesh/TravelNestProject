@@ -148,57 +148,44 @@ function BookingDetails() {
 
         navigate('/payment', { state: { clientSecret, bookingData } });
       } catch (error) {
-        console.error('Error creating payment intent:', error);
+        console.error('Booking failed:', error);
+      } finally {
+        setProcessing(false);
       }
     }
   };
 
   const handleEdit = (index) => {
-    const passenger = passengers[index];
-    setFormData({
-      firstName: passenger.firstName,
-      lastName: passenger.lastName,
-      dateOfBirth: new Date(passenger.dateOfBirth).toISOString().substring(0, 10),
-      passportNumber: passenger.passportNumber,
-      passportExpiry: new Date(passenger.passportExpiry).toISOString().substring(0, 10),
-      contactNumber: passenger.contactNumber,
-      email: passenger.email,
-      errors: {}
-    });
+    const passengerToEdit = passengers[index];
+    setFormData(passengerToEdit);
     setPassengers(passengers.filter((_, i) => i !== index));
   };
 
+  // Return early if location.state is missing
   if (!location.state) {
-    return (
-      <div className="error-message">
-        Error: No booking information found. Please go back and try again.
-      </div>
-    );
+    return <div>Error: Missing booking details. Please start your booking process again.</div>;
   }
 
   return (
-    <div className="container">
-      <div className="passenger-form">
-        <h2>Passenger Details</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="input-container">
-              <label className="input-label">First Name *</label>
+    <div>
+      <div className="container">
+        <div className="passenger-form">
+          <form onSubmit={handleSubmit}>
+            <h2>Enter Person Details</h2>
+            <div className="form-row">
               <input
-                type="text"
                 className="input-style"
+                type="text"
+                name="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleChange('firstName', e.target.value)}
                 placeholder="First Name *"
-                required
               />
               {formData.errors.firstName && <span className="error">{formData.errors.firstName}</span>}
-            </div>
-            <div className="input-container">
-              <label className="input-label">Last Name *</label>
               <input
-                type="text"
                 className="input-style"
+                type="text"
+                name="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleChange('lastName', e.target.value)}
                 placeholder="Last Name *"
@@ -206,51 +193,58 @@ function BookingDetails() {
               />
               {formData.errors.lastName && <span className="error">{formData.errors.lastName}</span>}
             </div>
-          </div>
-          <div className="form-row">
-            <div className="input-container">
-              <label className="input-label">Date of Birth *</label>
-              <input
-                type="date"
-                className="input-style"
-                value={formData.dateOfBirth}
-                onChange={(e) => handleChange('dateOfBirth', e.target.value)}
-                placeholder="Date of Birth *"
-                required
-              />
+            <div className="form-row">
+              <div className="input-container">
+                <input
+                  className="input-style"
+                  type="date"
+                  name="dateOfBirth"
+                  value={formData.dateOfBirth}
+                  onChange={(e) => handleChange('dateOfBirth', e.target.value)}
+                  required
+                />
+                <span className="input-label">Date of Birth *</span>
+              </div>
               {formData.errors.dateOfBirth && <span className="error">{formData.errors.dateOfBirth}</span>}
-            </div>
-            <div className="input-container">
-              <label className="input-label">Passport Number *</label>
               <input
-                type="text"
                 className="input-style"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                placeholder="Email *"
+              />
+              {formData.errors.email && <span className="error">{formData.errors.email}</span>}
+            </div>
+            <div className="form-row">
+              <input
+                className="input-style"
+                type="text"
+                name="passportNumber"
                 value={formData.passportNumber}
                 onChange={(e) => handleChange('passportNumber', e.target.value)}
                 placeholder="Passport Number *"
                 required
               />
               {formData.errors.passportNumber && <span className="error">{formData.errors.passportNumber}</span>}
-            </div>
-          </div>
-          <div className="form-row">
-            <div className="input-container">
-              <label className="input-label">Passport Expiry Date *</label>
-              <input
-                type="date"
-                className="input-style"
-                value={formData.passportExpiry}
-                onChange={(e) => handleChange('passportExpiry', e.target.value)}
-                placeholder="Passport Expiry Date *"
-                required
-              />
+              <div className="input-container">
+                <input
+                  className="input-style"
+                  type="date"
+                  name="passportExpiry"
+                  value={formData.passportExpiry}
+                  onChange={(e) => handleChange('passportExpiry', e.target.value)}
+                  required
+                />
+                <span className="input-label">Passport Expiry Date *</span>
+              </div>
               {formData.errors.passportExpiry && <span className="error">{formData.errors.passportExpiry}</span>}
             </div>
-            <div className="input-container">
-              <label className="input-label">Contact Number *</label>
+            <div className="form-row">
               <input
-                type="text"
                 className="input-style"
+                type="text"
+                name="contactNumber"
                 value={formData.contactNumber}
                 onChange={(e) => handleChange('contactNumber', e.target.value)}
                 placeholder="Contact Number *"
@@ -258,50 +252,36 @@ function BookingDetails() {
               />
               {formData.errors.contactNumber && <span className="error">{formData.errors.contactNumber}</span>}
             </div>
+            {passengers.length < parseInt(location.state.persons) && (
+              <button type="submit" className="btn">
+                Add Passenger
+              </button>
+            )}
+          </form>
+        </div>
+        <div className="booking-summary">
+          <h2>Booking Summary</h2>
+          <ul>
+            {passengers.map((passenger, index) => (
+              <li key={index} className="passenger-item">
+                <span>{passenger.firstName} {passenger.lastName}</span>
+                <button className="edit-btn" onClick={() => handleEdit(index)}>Edit</button>
+              </li>
+            ))}
+          </ul>
+          <div className="summary-details">
+            <p>No of Persons: {passengers.length}</p>
+            <p>Subtotal: ${totalCost.toFixed(2)}</p>
+            {location.state.promoCode && <p>Applied Promo Code: {location.state.promoCode}</p>}
+            <p>Estimated Tax: ${(estimatedTax).toFixed(2)}</p>
+            <p>Order Total: ${subTotal.toFixed(2)}</p>
           </div>
-          <div className="form-row">
-            <div className="input-container">
-              <label className="input-label">Email *</label>
-              <input
-                type="email"
-                className="input-style"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="Email *"
-                required
-              />
-              {formData.errors.email && <span className="error">{formData.errors.email}</span>}
-            </div>
-          </div>
-          {passengers.length < parseInt(location.state.persons) && (
-            <button type="submit" className="btn">
-              Add Passenger
+          {passengers.length === parseInt(location.state.persons) && (
+            <button className="payment-btn" onClick={handleBooking} disabled={processing}>
+              {processing ? 'Processing...' : 'Proceed to Payment'}
             </button>
           )}
-        </form>
-      </div>
-      <div className="booking-summary">
-        <h2>Booking Summary</h2>
-        <ul>
-          {passengers.map((passenger, index) => (
-            <li key={index} className="passenger-item">
-              <span>{passenger.firstName} {passenger.lastName}</span>
-              <button className="edit-btn" onClick={() => handleEdit(index)}>Edit</button>
-            </li>
-          ))}
-        </ul>
-        <div className="summary-details">
-          <p>No of Persons: {passengers.length}</p>
-          <p>Subtotal: ${totalCost.toFixed(2)}</p>
-          {location.state.promoCode && <p>Applied Promo Code: {location.state.promoCode}</p>}
-          <p>Estimated Tax: ${(estimatedTax).toFixed(2)}</p>
-          <p>Order Total: ${subTotal.toFixed(2)}</p>
         </div>
-        {passengers.length === parseInt(location.state.persons) && (
-          <button className="payment-btn" onClick={handleBooking} disabled={processing}>
-            {processing ? 'Processing...' : 'Proceed to Payment'}
-          </button>
-        )}
       </div>
     </div>
   );
