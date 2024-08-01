@@ -8,11 +8,22 @@ function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
   const { userInfo } = useContext(SessionContext); 
-  const { clientSecret, bookingData } = location.state;
   const stripe = useStripe();
   const elements = useElements();
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [emailStatus, setEmailStatus] = useState(null);
+
+  // Check if location.state is null
+  const state = location.state;
+  if (!state) {
+    return (
+      <div className="error-message">
+        Error: Payment information not found. Please go back and try again.
+      </div>
+    );
+  }
+
+  const { clientSecret, bookingData } = state;
 
   const sendEmails = async () => {
     const emailPromises = bookingData.personDetails.map((passenger) => {

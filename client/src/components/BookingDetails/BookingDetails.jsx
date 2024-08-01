@@ -1,25 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SessionContext } from '../../context/SessionContext'; 
+import { SessionContext } from '../../context/SessionContext';
 import './BookingDetails.css';
 
 function BookingDetails() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userInfo } = useContext(SessionContext); 
-
-  const {
-    packageId,
-    persons,
-    dateOfTravel,
-    packageName,
-    amountPerPerson,
-    discountId,
-    discountPercentage,
-    promoCode,
-    location: tripLocation,
-    noOfDays
-  } = location.state;
+  const { userInfo } = useContext(SessionContext);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -40,21 +27,24 @@ function BookingDetails() {
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
-    const totalFare = amountPerPerson * passengers.length;
-    let discountPercentageToUse = discountPercentage;
-    if (!discountId) {
-      discountPercentageToUse = 0;
+    if (location.state) {
+      const { amountPerPerson, discountId, discountPercentage } = location.state;
+      const totalFare = amountPerPerson * passengers.length;
+      let discountPercentageToUse = discountPercentage;
+      if (!discountId) {
+        discountPercentageToUse = 0;
+      }
+      const discountAmount = totalFare * (discountPercentageToUse / 100);
+      const discountedTotal = totalFare - discountAmount;
+      const taxAmount = discountedTotal * 0.13;
+      console.log("Amount :", totalFare, amountPerPerson, passengers.length, discountId);
+      setTotalCost(totalFare);
+      setDiscountedCost(discountedTotal);
+      setEstimatedTax(taxAmount);
+      setSubTotal(discountedTotal + taxAmount);
     }
-    const discountAmount = totalFare * (discountPercentageToUse / 100);
-    const discountedTotal = totalFare - discountAmount;
-    const taxAmount = discountedTotal * 0.13;
-    console.log("Amount :", totalFare, amountPerPerson, passengers.length, discountId);
-    setTotalCost(totalFare);
-    setDiscountedCost(discountedTotal);
-    setEstimatedTax(taxAmount);
-    setSubTotal(discountedTotal + taxAmount);
-  }, [passengers.length, discountId, discountPercentage, amountPerPerson]);
-  
+  }, [passengers.length, location.state]);
+
   const handleChange = (field, value) => {
     setFormData({
       ...formData,
@@ -82,7 +72,7 @@ function BookingDetails() {
       errors.passportNumber = 'Passport number is required';
       isValid = false;
     }
-    if (!formData.passportExpiry || new Date(formData.passportExpiry) <= new Date(dateOfTravel)) {
+    if (!formData.passportExpiry || new Date(formData.passportExpiry) <= new Date(location.state?.dateOfTravel)) {
       errors.passportExpiry = 'Passport expiry date must be after the travel date';
       isValid = false;
     }
@@ -116,7 +106,8 @@ function BookingDetails() {
   };
 
   const handleBooking = async () => {
-    if (passengers.length === parseInt(persons)) {
+    if (passengers.length === parseInt(location.state?.persons)) {
+      const { packageId, dateOfTravel, tripLocation, noOfDays, amountPerPerson, persons, discountId } = location.state;
       const bookingData = {
         packageId: packageId,
         userId: userInfo.userId,
@@ -138,7 +129,7 @@ function BookingDetails() {
         tripLocation: tripLocation,
         noOfDays: noOfDays
       };
-  
+
       try {
         const response = await fetch('http://localhost:3000/api/createPaymentIntent', {
           method: 'POST',
@@ -147,49 +138,67 @@ function BookingDetails() {
           },
           body: JSON.stringify({ amount: subTotal })
         });
-  
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const { clientSecret } = await response.json();
         console.log('Payment Intent created:', clientSecret);
-  
+
         navigate('/payment', { state: { clientSecret, bookingData } });
       } catch (error) {
-        console.error('Booking failed:', error);
-      } finally {
-        setProcessing(false);
+        console.error('Error creating payment intent:', error);
       }
     }
   };
 
   const handleEdit = (index) => {
-    const passengerToEdit = passengers[index];
-    setFormData(passengerToEdit);
+    const passenger = passengers[index];
+    setFormData({
+      firstName: passenger.firstName,
+      lastName: passenger.lastName,
+      dateOfBirth: new Date(passenger.dateOfBirth).toISOString().substring(0, 10),
+      passportNumber: passenger.passportNumber,
+      passportExpiry: new Date(passenger.passportExpiry).toISOString().substring(0, 10),
+      contactNumber: passenger.contactNumber,
+      email: passenger.email,
+      errors: {}
+    });
     setPassengers(passengers.filter((_, i) => i !== index));
   };
 
+  if (!location.state) {
+    return (
+      <div className="error-message">
+        Error: No booking information found. Please go back and try again.
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <div className="container">
-        <div className="passenger-form">
-          <form onSubmit={handleSubmit}>
-            <h2>Enter Person Details</h2>
-            <div className="form-row">
+    <div className="container">
+      <div className="passenger-form">
+        <h2>Passenger Details</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">First Name *</label>
               <input
-                className="input-style"
                 type="text"
-                name="firstName"
+                className="input-style"
                 value={formData.firstName}
                 onChange={(e) => handleChange('firstName', e.target.value)}
                 placeholder="First Name *"
+                required
               />
               {formData.errors.firstName && <span className="error">{formData.errors.firstName}</span>}
+            </div>
+            <div className="input-container">
+              <label className="input-label">Last Name *</label>
               <input
-                className="input-style"
                 type="text"
-                name="lastName"
+                className="input-style"
                 value={formData.lastName}
                 onChange={(e) => handleChange('lastName', e.target.value)}
                 placeholder="Last Name *"
@@ -197,58 +206,51 @@ function BookingDetails() {
               />
               {formData.errors.lastName && <span className="error">{formData.errors.lastName}</span>}
             </div>
-            <div className="form-row">
-              <div className="input-container">
-                <input
-                  className="input-style"
-                  type="date"
-                  name="dateOfBirth"
-                  value={formData.dateOfBirth}
-                  onChange={(e) => handleChange('dateOfBirth', e.target.value)}
-                  required
-                />
-                <span className="input-label">Date of Birth *</span>
-              </div>
-              {formData.errors.dateOfBirth && <span className="error">{formData.errors.dateOfBirth}</span>}
+          </div>
+          <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">Date of Birth *</label>
               <input
+                type="date"
                 className="input-style"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="Email *"
+                value={formData.dateOfBirth}
+                onChange={(e) => handleChange('dateOfBirth', e.target.value)}
+                placeholder="Date of Birth *"
+                required
               />
-              {formData.errors.email && <span className="error">{formData.errors.email}</span>}
+              {formData.errors.dateOfBirth && <span className="error">{formData.errors.dateOfBirth}</span>}
             </div>
-            <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">Passport Number *</label>
               <input
-                className="input-style"
                 type="text"
-                name="passportNumber"
+                className="input-style"
                 value={formData.passportNumber}
                 onChange={(e) => handleChange('passportNumber', e.target.value)}
                 placeholder="Passport Number *"
                 required
               />
               {formData.errors.passportNumber && <span className="error">{formData.errors.passportNumber}</span>}
-              <div className="input-container">
-                <input
-                  className="input-style"
-                  type="date"
-                  name="passportExpiry"
-                  value={formData.passportExpiry}
-                  onChange={(e) => handleChange('passportExpiry', e.target.value)}
-                  required
-                />
-                <span className="input-label">Passport Expiry Date *</span>
-              </div>
+            </div>
+          </div>
+          <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">Passport Expiry Date *</label>
+              <input
+                type="date"
+                className="input-style"
+                value={formData.passportExpiry}
+                onChange={(e) => handleChange('passportExpiry', e.target.value)}
+                placeholder="Passport Expiry Date *"
+                required
+              />
               {formData.errors.passportExpiry && <span className="error">{formData.errors.passportExpiry}</span>}
             </div>
-            <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">Contact Number *</label>
               <input
-                className="input-style"
                 type="text"
-                name="contactNumber"
+                className="input-style"
                 value={formData.contactNumber}
                 onChange={(e) => handleChange('contactNumber', e.target.value)}
                 placeholder="Contact Number *"
@@ -256,36 +258,50 @@ function BookingDetails() {
               />
               {formData.errors.contactNumber && <span className="error">{formData.errors.contactNumber}</span>}
             </div>
-            {passengers.length < parseInt(persons) && (
-              <button type="submit" className="btn">
-                Add Passenger
-              </button>
-            )}
-          </form>
-        </div>
-        <div className="booking-summary">
-          <h2>Booking Summary</h2>
-          <ul>
-            {passengers.map((passenger, index) => (
-              <li key={index} className="passenger-item">
-                <span>{passenger.firstName} {passenger.lastName}</span>
-                <button className="edit-btn" onClick={() => handleEdit(index)}>Edit</button>
-              </li>
-            ))}
-          </ul>
-          <div className="summary-details">
-            <p>No of Persons: {passengers.length}</p>
-            <p>Subtotal: ${totalCost.toFixed(2)}</p>
-            {promoCode && <p>Applied Promo Code: {promoCode}</p>}
-            <p>Estimated Tax: ${(estimatedTax).toFixed(2)}</p>
-            <p>Order Total: ${subTotal.toFixed(2)}</p>
           </div>
-          {passengers.length === parseInt(persons) && (
-            <button className="payment-btn" onClick={handleBooking} disabled={processing}>
-              {processing ? 'Processing...' : 'Proceed to Payment'}
+          <div className="form-row">
+            <div className="input-container">
+              <label className="input-label">Email *</label>
+              <input
+                type="email"
+                className="input-style"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                placeholder="Email *"
+                required
+              />
+              {formData.errors.email && <span className="error">{formData.errors.email}</span>}
+            </div>
+          </div>
+          {passengers.length < parseInt(location.state.persons) && (
+            <button type="submit" className="btn">
+              Add Passenger
             </button>
           )}
+        </form>
+      </div>
+      <div className="booking-summary">
+        <h2>Booking Summary</h2>
+        <ul>
+          {passengers.map((passenger, index) => (
+            <li key={index} className="passenger-item">
+              <span>{passenger.firstName} {passenger.lastName}</span>
+              <button className="edit-btn" onClick={() => handleEdit(index)}>Edit</button>
+            </li>
+          ))}
+        </ul>
+        <div className="summary-details">
+          <p>No of Persons: {passengers.length}</p>
+          <p>Subtotal: ${totalCost.toFixed(2)}</p>
+          {location.state.promoCode && <p>Applied Promo Code: {location.state.promoCode}</p>}
+          <p>Estimated Tax: ${(estimatedTax).toFixed(2)}</p>
+          <p>Order Total: ${subTotal.toFixed(2)}</p>
         </div>
+        {passengers.length === parseInt(location.state.persons) && (
+          <button className="payment-btn" onClick={handleBooking} disabled={processing}>
+            {processing ? 'Processing...' : 'Proceed to Payment'}
+          </button>
+        )}
       </div>
     </div>
   );
