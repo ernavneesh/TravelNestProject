@@ -132,3 +132,15 @@
   font-size: 0.875em;
   margin-top: 5px;
 }
+
+.error-message {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #dc3545;
+  border-radius: 8px;
+  background-color: #f8d7da;
+  color: #721c24;
+  font-size: 1em;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

@@ -1,28 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { SessionContext } from '../../context/SessionContext'; 
+import { SessionContext } from '../../context/SessionContext';
 import './BookingDetails.css';
-
-//const stripePromise = loadStripe('pk_test_51PcxHYHdWUZnn01otPVySYcfLnYPt92VUNiVieydSW4buIZgvuA6cICM62wXgYHNqZ8veYcTUq2Rqi9A7maxL7So00sG2rnyd9');
-
 
 function BookingDetails() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userInfo } = useContext(SessionContext); 
-
-  const {
-    packageId,
-    persons,
-    dateOfTravel,
-    packageName,
-    amountPerPerson,
-    discountId,
-    discountPercentage,
-    promoCode,
-    location: tripLocation,
-    noOfDays
-  } = location.state;
+  const { userInfo } = useContext(SessionContext);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -43,21 +27,24 @@ function BookingDetails() {
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
-    const totalFare = amountPerPerson * passengers.length;
-    let discountPercentageToUse = discountPercentage;
-    if (!discountId) {
-      discountPercentageToUse = 0;
+    if (location.state) {
+      const { amountPerPerson, discountId, discountPercentage } = location.state;
+      const totalFare = amountPerPerson * passengers.length;
+      let discountPercentageToUse = discountPercentage;
+      if (!discountId) {
+        discountPercentageToUse = 0;
+      }
+      const discountAmount = totalFare * (discountPercentageToUse / 100);
+      const discountedTotal = totalFare - discountAmount;
+      const taxAmount = discountedTotal * 0.13;
+      console.log("Amount :", totalFare, amountPerPerson, passengers.length, discountId);
+      setTotalCost(totalFare);
+      setDiscountedCost(discountedTotal);
+      setEstimatedTax(taxAmount);
+      setSubTotal(discountedTotal + taxAmount);
     }
-    const discountAmount = totalFare * (discountPercentageToUse / 100);
-    const discountedTotal = totalFare - discountAmount;
-    const taxAmount = discountedTotal * 0.13;
-    console.log("Amount :", totalFare, amountPerPerson, passengers.length, discountId);
-    setTotalCost(totalFare);
-    setDiscountedCost(discountedTotal);
-    setEstimatedTax(taxAmount);
-    setSubTotal(discountedTotal + taxAmount);
-  }, [passengers.length, discountId, discountPercentage, amountPerPerson]);
-  
+  }, [passengers.length, location.state]);
+
   const handleChange = (field, value) => {
     setFormData({
       ...formData,
@@ -85,7 +72,7 @@ function BookingDetails() {
       errors.passportNumber = 'Passport number is required';
       isValid = false;
     }
-    if (!formData.passportExpiry || new Date(formData.passportExpiry) <= new Date(dateOfTravel)) {
+    if (!formData.passportExpiry || new Date(formData.passportExpiry) <= new Date(location.state?.dateOfTravel)) {
       errors.passportExpiry = 'Passport expiry date must be after the travel date';
       isValid = false;
     }
@@ -119,7 +106,8 @@ function BookingDetails() {
   };
 
   const handleBooking = async () => {
-    if (passengers.length === parseInt(persons)) {
+    if (passengers.length === parseInt(location.state?.persons)) {
+      const { packageId, dateOfTravel, tripLocation, noOfDays, amountPerPerson, persons, discountId } = location.state;
       const bookingData = {
         packageId: packageId,
         userId: userInfo.userId,
@@ -141,7 +129,7 @@ function BookingDetails() {
         tripLocation: tripLocation,
         noOfDays: noOfDays
       };
-  
+
       try {
         const response = await fetch('http://localhost:3000/api/createPaymentIntent', {
           method: 'POST',
@@ -150,14 +138,14 @@ function BookingDetails() {
           },
           body: JSON.stringify({ amount: subTotal })
         });
-  
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const { clientSecret } = await response.json();
         console.log('Payment Intent created:', clientSecret);
-  
+
         navigate('/payment', { state: { clientSecret, bookingData } });
       } catch (error) {
         console.error('Booking failed:', error);
@@ -172,6 +160,16 @@ function BookingDetails() {
     setFormData(passengerToEdit);
     setPassengers(passengers.filter((_, i) => i !== index));
   };
+
+  // Return early if location.state is missing
+  if (!location.state) {
+    return (
+      <div style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
+        Error: Missing booking details. Please start your booking process again.
+      </div>
+    );
+  }
+  
 
   return (
     <div>
@@ -259,7 +257,7 @@ function BookingDetails() {
               />
               {formData.errors.contactNumber && <span className="error">{formData.errors.contactNumber}</span>}
             </div>
-            {passengers.length < parseInt(persons) && (
+            {passengers.length < parseInt(location.state.persons) && (
               <button type="submit" className="btn">
                 Add Passenger
               </button>
@@ -279,11 +277,11 @@ function BookingDetails() {
           <div className="summary-details">
             <p>No of Persons: {passengers.length}</p>
             <p>Subtotal: ${totalCost.toFixed(2)}</p>
-            {promoCode && <p>Applied Promo Code: {promoCode}</p>}
+            {location.state.promoCode && <p>Applied Promo Code: {location.state.promoCode}</p>}
             <p>Estimated Tax: ${(estimatedTax).toFixed(2)}</p>
             <p>Order Total: ${subTotal.toFixed(2)}</p>
           </div>
-          {passengers.length === parseInt(persons) && (
+          {passengers.length === parseInt(location.state.persons) && (
             <button className="payment-btn" onClick={handleBooking} disabled={processing}>
               {processing ? 'Processing...' : 'Proceed to Payment'}
             </button>
