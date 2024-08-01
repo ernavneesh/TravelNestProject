@@ -163,8 +163,13 @@ function BookingDetails() {
 
   // Return early if location.state is missing
   if (!location.state) {
-    return <div>Error: Missing booking details. Please start your booking process again.</div>;
+    return (
+      <div style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
+        Error: Missing booking details. Please start your booking process again.
+      </div>
+    );
   }
+  
 
   return (
     <div>
